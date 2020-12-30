@@ -4,6 +4,10 @@ baseUri: http://localhost:8080
 version: 1.0
 mediaType: application/json
 traits:
+  unauthorized-error: !include unauthorized-error.raml
+  invalid-request-error: !include invalid-error.raml
+  not-found-error: !include not-found-error.raml
+  stale-entity-error: !include stale-entity-error.raml
   authorized:
     description: Request authorization mechanism
     headers:
@@ -11,8 +15,8 @@ traits:
         required: true
 
 /crm/users:
-    displayName: Get the list of API users
-    is: [authorized]
+    displayName: Collection resource for the User entity
+    is: [authorized, unauthorized-error]
     get:
         responses:
             200:
@@ -25,12 +29,12 @@ traits:
                                     "id": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
                                     "name": "John Smith",
                                     "username": "jsmith",
-                                    "role": "user|admin"
+                                    "role": "admin"
                                 },
                                 {...}
                             ]}
-            401:
     post:
+        is: [invalid-request-error]
         body:
             application/json:
                  example: |
@@ -38,22 +42,25 @@ traits:
                         "name": "John Smith",
                         "username": "jsmith",
                         "password": "some-password",
-                        "role": "user|admin"
+                        "role": "admin"
                     }
         responses:
-            200:
+            201:
                 body:
                     application/json:
                         example: |
                             {
                                 "id": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
                             }
-            401:
-            400:
     /{userId}:
+        displayName: Resource for individual User operations
+        is: [authorized, unauthorized-error, invalid-request-error, not-found-error]
         get:
             responses:
                 200:
+                    headers:
+                        ETag:
+                            description: The user version number for optimistic locking on update
                     body:
                         example: |
                             {
@@ -62,9 +69,10 @@ traits:
                                 "username": "jsmith",
                                 "role": "user"
                             }
-                401:
-                404:
-        post:
+        put:
+            headers:
+                If-Match:
+                    description: The user version number returned in the GET call.
             body:
                 example | 
                     {
@@ -75,10 +83,10 @@ traits:
                     }
             responses:
                 204:
-                400:
-                401:
-                404:
         patch:
+            headers:
+                If-Match:
+                    description: The user version number returned in the GET call.
             body:
                 example | 
                     {
@@ -86,11 +94,6 @@ traits:
                     }
             responses:
                 204:
-                400:
-                401:
-                404:
         delete:
             responses:
                 204:
-                401:
-                404:

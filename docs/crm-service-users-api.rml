@@ -1,0 +1,96 @@
+#%RAML 1.0
+title: CRM Service API
+baseUri: http://localhost:8080
+version: 1.0
+mediaType: application/json
+traits:
+  authorized:
+    description: Request authorization mechanism
+    headers:
+      x-auth-token:
+        required: true
+
+/crm/users:
+    displayName: Get the list of API users
+    is: [authorized]
+    get:
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                            "items": [
+                                {
+                                    "id": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
+                                    "name": "John Smith",
+                                    "username": "jsmith",
+                                    "role": "user|admin"
+                                },
+                                {...}
+                            ]}
+            401:
+    post:
+        body:
+            application/json:
+                 example: |
+                    {
+                        "name": "John Smith",
+                        "username": "jsmith",
+                        "password": "some-password",
+                        "role": "user|admin"
+                    }
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "id": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
+                            }
+            401:
+            400:
+    /{userId}:
+        get:
+            responses:
+                200:
+                    body:
+                        example: |
+                            {
+                                "id": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
+                                "name": "John Smith",
+                                "username": "jsmith",
+                                "role": "user"
+                            }
+                401:
+                404:
+        post:
+            body:
+                example | 
+                    {
+                        "name": "John Smith",
+                        "username": "jsmith",
+                        "password": "some-password",
+                        "role": "admin"
+                    }
+            responses:
+                204:
+                400:
+                401:
+                404:
+        patch:
+            body:
+                example | 
+                    {
+                        "role": "admin"
+                    }
+            responses:
+                204:
+                400:
+                401:
+                404:
+        delete:
+            responses:
+                204:
+                401:
+                404:

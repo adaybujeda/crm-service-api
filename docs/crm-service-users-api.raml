@@ -15,7 +15,7 @@ traits:
         required: true
 
 /crm/users:
-    displayName: Collection resource for the User entity
+    description: Collection resource for the User entity
     is: [authorized, unauthorized-error]
     get:
         responses:
@@ -53,7 +53,7 @@ traits:
                                 "id": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
                             }
     /{userId}:
-        displayName: Resource for individual User operations
+        description: Resource for individual User operations
         is: [authorized, unauthorized-error, invalid-request-error, not-found-error]
         get:
             responses:
@@ -70,11 +70,12 @@ traits:
                                 "role": "user"
                             }
         put:
+            is: [stale-entity-error]
             headers:
                 If-Match:
                     description: The user version number returned in the GET call.
             body:
-                example | 
+                example: |
                     {
                         "name": "John Smith",
                         "username": "jsmith",
@@ -84,14 +85,13 @@ traits:
             responses:
                 204:
         patch:
+            description: To make a user and admin or to remove admin privileges to a user.
+            is: [stale-entity-error]
             headers:
                 If-Match:
                     description: The user version number returned in the GET call.
             body:
-                example | 
-                    {
-                        "role": "admin"
-                    }
+                example: {"role": "admin"}
             responses:
                 204:
         delete:

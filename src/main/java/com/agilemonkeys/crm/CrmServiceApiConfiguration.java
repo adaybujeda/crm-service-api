@@ -1,10 +1,20 @@
 package com.agilemonkeys.crm;
 
-import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.*;
-import javax.validation.constraints.*;
+import io.dropwizard.Configuration;
+import io.dropwizard.db.DataSourceFactory;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 public class CrmServiceApiConfiguration extends Configuration {
-    // TODO: implement service configuration
+
+    @Valid
+    @NotNull
+    private DataSourceFactory dataSource = new DataSourceFactory();
+
+    @JsonProperty("dataSource")
+    public DataSourceFactory getDataSource() {
+        return dataSource;
+    }
 }

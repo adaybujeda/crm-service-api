@@ -14,13 +14,13 @@ The service will return a 412 response if the version numbers do not match.
 As the services and data entities are very simple, we could have selected almost any type of storage.  
 To keep it simple, I am going to use an SQL solution. For local development, I will be using an in memory DB: **H2**
 
-Between the different off-the-shelve options that Dropwizard provides to interact with SQL databases, I have selected **JDBI3**.  
+Between the different off-the-shelve options that Dropwizard provides to interact with SQL databases, I have selected **JDBI3**.
 It provides a simple SQL interface, easy to implement and understand by developers. As well, because I have some previous experience with it.
 
 Other considerations when selecting storage:
 * Has the company invested in a certain storage technology/cluster.
-* What is the expertise in the team/company for certain types and engines.
-* Is there a need to explore new DB engines? If this is a small, low-key project, we could use it to learn new things.
+* What is the expertise in the team/company for certain types, engines and libraries.
+* Is there a need to explore new technologies? If this is a small, low-key project, we could use it to learn new things.
 
 ### Database change management - Dropwizard Migrations - Liquibase
 This might have been a bit too much for this project, but I wanted to show that automating DB changes are an important part of the dev lifecycle.

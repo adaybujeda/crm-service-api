@@ -1,7 +1,6 @@
 # Agile Monkeys - Crm Service API - crm-service-api
 RESTfull API to manage users and customers. Basic CRUD operations to manage User and Customer entities.
 
-## Local Development
 ### Local environment
 The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 

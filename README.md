@@ -5,7 +5,8 @@ RESTfull API to manage users and customers. Basic CRUD operations to manage User
 The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 
 ### Run the service locally - With local DB under `/tmp/crm-service-db`
-* Build the service, run `mvn clean install`
+* Build the service:
+* `mvn clean install`
 * Create DB tables:
 * `DB_URL=jdbc:h2:/tmp/crm-service-db java -jar target/crm-service-api-1.0.jar db migrate /config.yml`
 * Start the service:

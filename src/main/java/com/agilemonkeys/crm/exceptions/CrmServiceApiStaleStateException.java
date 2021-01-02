@@ -1,7 +1,9 @@
 package com.agilemonkeys.crm.exceptions;
 
-public class CrmServiceApiStaleStateException extends RuntimeException {
+import org.eclipse.jetty.http.HttpStatus;
+
+public class CrmServiceApiStaleStateException extends CrmServiceApiException {
     public CrmServiceApiStaleStateException(String message) {
-        super(message);
+        super(HttpStatus.PRECONDITION_FAILED_412, message);
     }
 }

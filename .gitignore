@@ -32,6 +32,6 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 
-notes.txt
+scratch/
 .idea/
 *.iml

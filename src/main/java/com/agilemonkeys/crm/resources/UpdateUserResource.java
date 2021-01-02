@@ -1,0 +1,44 @@
+package com.agilemonkeys.crm.resources;
+
+import com.agilemonkeys.crm.domain.User;
+import com.agilemonkeys.crm.services.UpdateUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.*;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.UUID;
+
+@Path("/crm/users")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class UpdateUserResource {
+
+    private static final Logger log = LoggerFactory.getLogger(UpdateUserResource.class);
+
+    private final UpdateUserService updateUserService;
+
+    public UpdateUserResource(UpdateUserService updateUserService) {
+        this.updateUserService = updateUserService;
+    }
+
+    @PUT
+    @Path("/{userId}")
+    public Response updateUser(@PathParam("userId") UUID userId, @NotNull @HeaderParam(HttpHeaders.IF_MATCH) Integer version, @Valid CreateUpdateUserRequest request) {
+        User updatedUser = updateUserService.updateUser(userId, version, request);
+        log.info("action=updateUser result=success userId={}", userId);
+        return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("/{userId}")
+    public Response updateRole(@PathParam("userId") UUID userId, @NotNull @HeaderParam(HttpHeaders.IF_MATCH) Integer version, @Valid UpdateRoleRequest request) {
+        User updatedUser = updateUserService.updateRole(userId, version, request.getRole());
+        log.info("action=updateRole result=success userId={}", userId);
+        return Response.noContent().build();
+    }
+}

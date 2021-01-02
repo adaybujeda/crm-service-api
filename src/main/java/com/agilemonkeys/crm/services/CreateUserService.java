@@ -7,6 +7,7 @@ import com.agilemonkeys.crm.storage.UsersDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class CreateUserService {
@@ -14,12 +15,15 @@ public class CreateUserService {
     private static final Logger log = LoggerFactory.getLogger(CreateUserService.class);
 
     private final UsersDao usersDao;
+    private final DuplicatedUserService duplicatedUserService;
 
-    public CreateUserService(UsersDao usersDao) {
+    public CreateUserService(UsersDao usersDao, DuplicatedUserService duplicatedUserService) {
         this.usersDao = usersDao;
+        this.duplicatedUserService = duplicatedUserService;
     }
 
     public User createUser(CreateUpdateUserRequest createRequest) {
+        duplicatedUserService.checkUsername(createRequest.getUsername(), Optional.empty());
         UUID newUserId = UUID.randomUUID();
         User newUser = UserBuilder.fromRequest(createRequest).withUserId(newUserId).build();
         usersDao.insertUser(newUser);

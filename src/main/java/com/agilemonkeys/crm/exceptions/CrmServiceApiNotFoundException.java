@@ -1,7 +1,9 @@
 package com.agilemonkeys.crm.exceptions;
 
-public class CrmServiceApiNotFoundException extends RuntimeException {
+import org.eclipse.jetty.http.HttpStatus;
+
+public class CrmServiceApiNotFoundException extends CrmServiceApiException {
     public CrmServiceApiNotFoundException(String message) {
-        super(message);
+        super(HttpStatus.NOT_FOUND_404, message);
     }
 }

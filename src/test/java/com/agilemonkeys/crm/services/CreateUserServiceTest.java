@@ -2,6 +2,7 @@ package com.agilemonkeys.crm.services;
 
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserRole;
+import com.agilemonkeys.crm.exceptions.CrmServiceApiDuplicatedException;
 import com.agilemonkeys.crm.resources.CreateUpdateUserRequest;
 import com.agilemonkeys.crm.storage.UsersDao;
 import org.hamcrest.MatcherAssert;
@@ -9,11 +10,22 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.Optional;
+
 public class CreateUserServiceTest {
 
     private UsersDao usersDao = Mockito.mock(UsersDao.class);
-    private CreateUserService underTest = new CreateUserService(usersDao);
+    private DuplicatedUserService duplicatedUserService = Mockito.mock(DuplicatedUserService.class);
+    private CreateUserService underTest = new CreateUserService(usersDao, duplicatedUserService);
 
+
+    @Test(expected = CrmServiceApiDuplicatedException.class)
+    public void should_propagate_exception_when_duplicatedUserService_throws_one() {
+        CreateUpdateUserRequest request = new CreateUpdateUserRequest("name", "username", "password", UserRole.ADMIN);
+        Mockito.doThrow(new CrmServiceApiDuplicatedException("test")).when(duplicatedUserService).checkUsername(request.getUsername(), Optional.empty());
+
+        underTest.createUser(request);
+    }
 
     @Test
     public void should_create_user_from_request_and_populate_default_fields() {
@@ -31,6 +43,7 @@ public class CreateUserServiceTest {
         MatcherAssert.assertThat(createdUser.getUpdatedDate(), Matchers.notNullValue());
 
         Mockito.verify(usersDao).insertUser(Mockito.any(User.class));
+        Mockito.verify(duplicatedUserService).checkUsername(request.getUsername(), Optional.empty());
     }
 
 }

@@ -1,11 +1,13 @@
 package com.agilemonkeys.crm;
 
 import com.agilemonkeys.crm.domain.User;
-import com.agilemonkeys.crm.exceptions.NotFoundExceptionMapper;
+import com.agilemonkeys.crm.exceptions.CrmServiceApiExceptionMapper;
 import com.agilemonkeys.crm.exceptions.ValidationExceptionMapper;
-import com.agilemonkeys.crm.resources.UsersResource;
-import com.agilemonkeys.crm.services.CreateUserService;
-import com.agilemonkeys.crm.services.GetUsersService;
+import com.agilemonkeys.crm.resources.CreateUserResource;
+import com.agilemonkeys.crm.resources.DeleteUserResource;
+import com.agilemonkeys.crm.resources.GetUsersResource;
+import com.agilemonkeys.crm.resources.UpdateUserResource;
+import com.agilemonkeys.crm.services.*;
 import com.agilemonkeys.crm.storage.UsersDao;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -56,14 +58,20 @@ public class CrmServiceApiApplication extends Application<CrmServiceApiConfigura
 
         //EXCEPTIONS
         environment.jersey().register(new ValidationExceptionMapper(new JerseyViolationExceptionMapper()));
-        environment.jersey().register(new NotFoundExceptionMapper());
+        environment.jersey().register(new CrmServiceApiExceptionMapper());
 
         //SERVICES
-        CreateUserService createUserService = new CreateUserService(usersDao);
+        DuplicatedUserService duplicatedUserService = new DuplicatedUserService(usersDao);
         GetUsersService getUsersService = new GetUsersService(usersDao);
+        CreateUserService createUserService = new CreateUserService(usersDao, duplicatedUserService);
+        UpdateUserService updateUserService = new UpdateUserService(usersDao, duplicatedUserService);
+        DeleteUserService deleteUserService = new DeleteUserService(usersDao);
 
         //RESOURCES
-        environment.jersey().register(new UsersResource(createUserService, getUsersService));
+        environment.jersey().register(new GetUsersResource(getUsersService));
+        environment.jersey().register(new CreateUserResource(createUserService));
+        environment.jersey().register(new UpdateUserResource(updateUserService));
+        environment.jersey().register(new DeleteUserResource(deleteUserService));
     }
 
 }

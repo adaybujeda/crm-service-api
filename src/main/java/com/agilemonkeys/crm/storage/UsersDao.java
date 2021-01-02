@@ -19,6 +19,9 @@ public interface UsersDao {
                "WHERE user_id=:userId AND version=:oldVersion")
     public int updateUser(@BindBean User user, @Bind("oldVersion") Integer oldVersion);
 
+    @SqlUpdate("DELETE FROM users WHERE user_id=:userId")
+    public int deleteUser(@Bind("userId") UUID userId);
+
     @SqlQuery("SELECT * FROM users")
     public List<User> getUsers();
 

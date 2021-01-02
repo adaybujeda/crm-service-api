@@ -15,6 +15,17 @@ public class UserBuilder {
     private LocalDateTime createdDate = LocalDateTime.now();
     private LocalDateTime updatedDate = LocalDateTime.now();
 
+    public static UserBuilder fromUser(User user) {
+        return new UserBuilder().withUserId(user.getUserId())
+                .withName(user.getName())
+                .withUsername(user.getUsername())
+                .withPassword(user.getPassword())
+                .withRole(user.getRole())
+                .withVersion(user.getVersion())
+                .withCreatedDate(user.getCreatedDate())
+                .withUpdatedDate(user.getUpdatedDate());
+    }
+
     public static UserBuilder fromRequest(CreateUpdateUserRequest request) {
         return new UserBuilder().withName(request.getName())
                 .withUsername(request.getUsername())

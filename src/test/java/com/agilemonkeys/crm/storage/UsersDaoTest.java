@@ -99,6 +99,20 @@ public class UsersDaoTest {
         MatcherAssert.assertThat(oldUser.getUserId(), Matchers.is(updatedUser.getUserId()));
     }
 
+    @Test
+    public void should_delete_user() {
+        String username = UUID.randomUUID().toString();
+        User newUser = insertUser(UUID.randomUUID(), username);
+        Optional<User> userById = underTest.getUserById(newUser.getUserId());
+        MatcherAssert.assertThat(userById.isPresent(), Matchers.is(true));
+
+        int deletedUsers = underTest.deleteUser(newUser.getUserId());
+        MatcherAssert.assertThat(deletedUsers, Matchers.is(1));
+
+        userById = underTest.getUserById(newUser.getUserId());
+        MatcherAssert.assertThat(userById.isPresent(), Matchers.is(false));
+    }
+
     private User createUser(UUID userId, String username, Integer version) {
         String name = UUID.randomUUID().toString();
         String password = UUID.randomUUID().toString();

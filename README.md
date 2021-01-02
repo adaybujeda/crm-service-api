@@ -1,6 +1,20 @@
 # Agile Monkeys - Crm Service API - crm-service-api
 RESTfull API to manage users and customers. Basic CRUD operations to manage User and Customer entities.
 
+## Local Development
+### Local environment
+The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
+
+### Run the service locally - With local DB under `/tmp/crm-service-db`
+* Build the service, run `mvn clean install`
+* Create DB tables:
+* `DB_URL=jdbc:h2:/tmp/crm-service-db java -jar target/crm-service-api-1.0.jar db migrate /config.yml`
+* Start the service:
+* `DB_URL=jdbc:h2:/tmp/crm-service-db java -jar target/crm-service-api-1.0.jar server /config.yml`
+* Some test URLs:
+* `curl -v http://localhost:8081/healthcheck`
+* `curl -v http://localhost:8080/crm/users`
+
 ## API specification
 **User management**
 [Users API specification](docs/crm-service-users-api.raml)  

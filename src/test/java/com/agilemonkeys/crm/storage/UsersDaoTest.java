@@ -3,14 +3,16 @@ package com.agilemonkeys.crm.storage;
 import com.agilemonkeys.crm.CrmServiceApiApplication;
 import com.agilemonkeys.crm.CrmServiceApiConfiguration;
 import com.agilemonkeys.crm.domain.User;
+import com.agilemonkeys.crm.domain.UserBuilder;
 import com.agilemonkeys.crm.domain.UserRole;
+import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -24,7 +26,9 @@ public class UsersDaoTest {
 
     @ClassRule
     public static final DropwizardAppRule<CrmServiceApiConfiguration> RULE =
-            new DropwizardAppRule<>(CrmServiceApiApplication.class, "/config.yml");
+            new DropwizardAppRule<>(CrmServiceApiApplication.class, "/config.yml",
+                    ConfigOverride.config("server.applicationConnectors[0].port", "0"),
+                    ConfigOverride.config("server.adminConnectors[0].port", "0"));
 
     private static UsersDao underTest;
 
@@ -50,8 +54,8 @@ public class UsersDaoTest {
         String username = UUID.randomUUID().toString();
         User newUser = insertUser(UUID.randomUUID(), username);
         Optional<User> userById = underTest.getUserById(newUser.getUserId());
-        Assert.assertThat(userById.isPresent(), Matchers.is(true));
-        Assert.assertThat(userById.get(), Matchers.is(newUser));
+        MatcherAssert.assertThat(userById.isPresent(), Matchers.is(true));
+        MatcherAssert.assertThat(userById.get(), Matchers.is(newUser));
     }
 
     @Test
@@ -59,8 +63,8 @@ public class UsersDaoTest {
         String username = UUID.randomUUID().toString();
         User newUser = insertUser(UUID.randomUUID(), username);
         Optional<User> userByUsername= underTest.getUserByUsername(username);
-        Assert.assertThat(userByUsername.isPresent(), Matchers.is(true));
-        Assert.assertThat(userByUsername.get(), Matchers.is(newUser));
+        MatcherAssert.assertThat(userByUsername.isPresent(), Matchers.is(true));
+        MatcherAssert.assertThat(userByUsername.get(), Matchers.is(newUser));
     }
 
     @Test
@@ -68,8 +72,8 @@ public class UsersDaoTest {
         String username = UUID.randomUUID().toString();
         User newUser = insertUser(UUID.randomUUID(), username);
         List<User> users = underTest.getUsers();
-        Assert.assertThat(users.isEmpty(), Matchers.is(false));
-        Assert.assertThat(users.size(), Matchers.is(1));
+        MatcherAssert.assertThat(users.isEmpty(), Matchers.is(false));
+        MatcherAssert.assertThat(users.size(), Matchers.greaterThan(0));
     }
 
     @Test
@@ -78,11 +82,11 @@ public class UsersDaoTest {
         User oldUser = insertUser(UUID.randomUUID(), username, 1);
         User updatedUser = new User(oldUser.getUserId(), "newName", "newUsername", "newPassword", UserRole.ADMIN, 10, oldUser.getCreatedDate(), LocalDateTime.now());
         int updatedRows = underTest.updateUser(updatedUser, oldUser.getVersion());
-        Assert.assertThat(updatedRows, Matchers.is(1));
+        MatcherAssert.assertThat(updatedRows, Matchers.is(1));
 
         Optional<User> userById = underTest.getUserById(oldUser.getUserId());
-        Assert.assertThat(userById.isPresent(), Matchers.is(true));
-        Assert.assertThat(userById.get(), Matchers.is(updatedUser));
+        MatcherAssert.assertThat(userById.isPresent(), Matchers.is(true));
+        MatcherAssert.assertThat(userById.get(), Matchers.is(updatedUser));
     }
 
     @Test
@@ -91,21 +95,22 @@ public class UsersDaoTest {
         User oldUser = insertUser(UUID.randomUUID(), username, 2);
         User updatedUser = new User(oldUser.getUserId(), "newName", "newUsername", "newPassword", UserRole.ADMIN, 10, oldUser.getCreatedDate(), LocalDateTime.now());
         int updatedRows = underTest.updateUser(updatedUser, 1);
-        Assert.assertThat(updatedRows, Matchers.is(0));
-        Assert.assertThat(oldUser.getUserId(), Matchers.is(updatedUser.getUserId()));
+        MatcherAssert.assertThat(updatedRows, Matchers.is(0));
+        MatcherAssert.assertThat(oldUser.getUserId(), Matchers.is(updatedUser.getUserId()));
     }
 
     private User createUser(UUID userId, String username, Integer version) {
         String name = UUID.randomUUID().toString();
         String password = UUID.randomUUID().toString();
-        User newUser = new User(userId, name, username, password, UserRole.USER, version, LocalDateTime.now(), LocalDateTime.now());
+        User newUser = new UserBuilder().withUserId(userId).withName(name).withUsername(username).withPassword(password)
+                .withVersion(version).build();
         return newUser;
     }
 
     private User insertUser(UUID userId, String username, Integer version) {
         User newUser = createUser(userId, username, version);
         int rowsInserted = underTest.insertUser(newUser);
-        Assert.assertThat(rowsInserted, CoreMatchers.is(1));
+        MatcherAssert.assertThat(rowsInserted, CoreMatchers.is(1));
         return newUser;
     }
 

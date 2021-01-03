@@ -14,6 +14,8 @@ The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 * Some test URLs:
 * `curl -v http://localhost:8081/healthcheck`
 * `curl -v http://localhost:8080/crm/users`
+* Delete the database to start fresh:
+* `rm /tmp/crm-service-db.*`
 
 ## API specification
 **User management**

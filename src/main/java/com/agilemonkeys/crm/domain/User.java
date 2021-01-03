@@ -22,7 +22,7 @@ public class User {
     public User(UUID userId, String name, String username, String password, UserRole role, Integer version, LocalDateTime createdDate, LocalDateTime updatedDate) {
         this.userId = userId;
         this.name = name;
-        this.username = username;
+        this.username = username == null ? null : username.toLowerCase();
         this.password = password;
         this.role = role;
         this.version = version;

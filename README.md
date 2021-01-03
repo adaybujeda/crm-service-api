@@ -42,18 +42,18 @@ This might have been a bit too much for this project, but I wanted to show that 
 The idea is to execute the migrations on every deployment to keep the DB and code in sync.
 
 ## Technical Notes
-**Resource Collections - Pagination**
+**Resource Collections - Pagination:**
 I have left out collections pagination initially. This is for getting all users or customers WS.
 This will be a problem once the users or customer collection reaches a certain number of items.
 
 Could be added at a later point, but clients will have to be updated to get the full list of items.
 
-**usernames**
-As there are no explicit requirements, usernames are case-sensitive.
+**Usernames:**
+As there are no explicit requirements, usernames are case-insensitive.
 
-**Delete User**
+**Delete User:**
 To be client friendly, deletes are always successful regardless of whether a user was deleted or not.
 
-**SSL**
+**SSL:**
 Should we use SSL for the final hop to access this service?
 I am assuming that SSL will be provided at the outer layers of the system, but will it be needed inside the data center?

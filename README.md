@@ -7,15 +7,18 @@ The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 ### Run the service locally - With local DB under `/tmp/crm-service-db`
 * Build the service:
 * `mvn clean install`
+* Delete the database to start fresh:
+* `rm /tmp/crm-service-db.*`
 * Create DB tables:
 * `DB_URL=jdbc:h2:/tmp/crm-service-db java -jar target/crm-service-api-1.0.jar db migrate /config.yml`
+* Create default ADMIN user `username=admin`. provide desired password
+* `DB_URL=jdbc:h2:/tmp/crm-service-db java -jar target/crm-service-api-1.0.jar create-admin-user -p changeme /config.yml`
 * Start the service:
 * `DB_URL=jdbc:h2:/tmp/crm-service-db java -jar target/crm-service-api-1.0.jar server /config.yml`
 * Some test URLs:
 * `curl -v http://localhost:8081/healthcheck`
 * `curl -v http://localhost:8080/crm/users`
-* Delete the database to start fresh:
-* `rm /tmp/crm-service-db.*`
+* [Postman collection](docs/crm-service-api.postman.json)
 
 ## API specification
 **User management**

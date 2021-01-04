@@ -11,7 +11,7 @@ The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 * `rm /tmp/crm-service-db.*`
 * Create DB tables:
 * `DB_URL=jdbc:h2:/tmp/crm-service-db java -jar target/crm-service-api-1.0.jar db migrate /config.yml`
-* Create default ADMIN user `username=admin`. provide desired password
+* Create default ADMIN user `username=admin`. Provide desired password
 * `DB_URL=jdbc:h2:/tmp/crm-service-db java -jar target/crm-service-api-1.0.jar create-admin-user -p changeme /config.yml`
 * Start the service:
 * `DB_URL=jdbc:h2:/tmp/crm-service-db java -jar target/crm-service-api-1.0.jar server /config.yml`
@@ -82,14 +82,15 @@ This will be a problem once the users or customer collection reaches a certain n
 Could be added at a later point, but clients will have to be updated to get the full list of items.
 
 **JWT tokens:**
-These are generated containing the user role. Tokens could have the wrong role or be valid for a deleted user until it expires.  
+These are generated containing the user role. Tokens could have the wrong role or be valid for a deleted user until it expires.
 An additional validation could be done when decoding the token, but decided not to implement it for simplicity and performance.
 
 **Usernames:**
 As there are no explicit requirements, usernames are case-insensitive.
 
 **Delete User:**
-To be client friendly, deletes are always successful regardless of whether a user was deleted or not.
+To be client friendly, deletes are always successful regardless of whether a user was deleted or not.  
+A "feature" I discovered while testing is that a user can delete its own user record.
 
 **ForbiddenException:**
 When a request is authenticated, but the role is not authorized for a particular resource, Dropwizard returns a 403 with tha custom error message.

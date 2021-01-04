@@ -6,6 +6,76 @@
 	},
 	"item": [
 		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"octopus\",\n    \"password\": \"password1234\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RestPassword",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDk3ODg0MjUsImlhdCI6MTYwOTc4NDgyNSwiaXNzIjoiY3JtLXNlcnZpY2UtYXBpIiwic3ViIjoiMWEzYjk0MmUtOWE2Yy00M2MwLWI1MjYtMzJiMjdlMTEzOTc1Iiwicm9sZSI6IkFETUlOIn0.zTx10pUvMStFMbFDYLtcxzkz-rG-VL7LEKBlpiv9ZxM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newPassword\": \"password1234\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/reset-password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"reset-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "CreateUser",
 			"request": {
 				"method": "POST",
@@ -53,7 +123,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Agile Octopus\",\n    \"username\": \"octopus\",\n    \"password\": \"password1234\",\n    \"role\": \"user\"\n}"
+					"raw": "{\n    \"name\": \"Agile Octopus\",\n    \"username\": \"octopus\",\n    \"role\": \"user\"\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8080/crm/users/9324ecd2-01fb-4c09-8a67-74ab352eaa0b",

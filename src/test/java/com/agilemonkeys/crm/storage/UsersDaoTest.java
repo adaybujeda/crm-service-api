@@ -116,7 +116,7 @@ public class UsersDaoTest {
     private User createUser(UUID userId, String username, Integer version) {
         String name = UUID.randomUUID().toString();
         String password = UUID.randomUUID().toString();
-        User newUser = new UserBuilder().withUserId(userId).withName(name).withNormalizedUsername(username).withPassword(password)
+        User newUser = UserBuilder.builder().withUserId(userId).withName(name).withNormalizedUsername(username).withPasswordHash(password)
                 .withVersion(version).build();
         return newUser;
     }

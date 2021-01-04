@@ -18,7 +18,7 @@ public class CrmAuthFactory {
 
     private static final Logger log = LoggerFactory.getLogger(CrmAuthFactory.class);
 
-    public void init(final CrmServiceApiConfiguration config, final Environment environment) {
+    public CrmAuthContext init(final CrmServiceApiConfiguration config, final Environment environment) {
         JwtTokenFactory jwtTokenFactory = new JwtTokenFactory(config.getJwtConfig());
         JwtTokenVerifier jwtTokenVerifier = new JwtTokenVerifier(config.getJwtConfig());
 
@@ -36,5 +36,24 @@ public class CrmAuthFactory {
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(AuthenticatedUser.class));
 
         log.info("action=auth-init completed");
+        return new CrmAuthContext(jwtTokenFactory, jwtTokenVerifier);
+    }
+
+    public static final class CrmAuthContext {
+        JwtTokenFactory jwtTokenFactory;
+        JwtTokenVerifier jwtTokenVerifier;
+
+        public CrmAuthContext(JwtTokenFactory jwtTokenFactory, JwtTokenVerifier jwtTokenVerifier) {
+            this.jwtTokenFactory = jwtTokenFactory;
+            this.jwtTokenVerifier = jwtTokenVerifier;
+        }
+
+        public JwtTokenFactory getJwtTokenFactory() {
+            return jwtTokenFactory;
+        }
+
+        public JwtTokenVerifier getJwtTokenVerifier() {
+            return jwtTokenVerifier;
+        }
     }
 }

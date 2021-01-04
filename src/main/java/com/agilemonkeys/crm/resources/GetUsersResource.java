@@ -37,7 +37,7 @@ public class GetUsersResource {
     @GET
     @Path("/{userId}")
     public Response getUser(@PathParam("userId") UUID userId) {
-        User user = getUsersService.getUser(userId);
+        User user = getUsersService.getUserById(userId);
         UserResponse response = UserResponse.fromUser(user);
         log.info("action=getUser result=success userId={}", userId);
         return Response.ok(response).header(HttpHeaders.ETAG, user.getVersion()).build();

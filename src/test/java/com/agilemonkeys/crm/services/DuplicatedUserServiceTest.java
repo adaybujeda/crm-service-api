@@ -13,7 +13,7 @@ import java.util.UUID;
 public class DuplicatedUserServiceTest {
 
     private static final UUID USER_ID = UUID.randomUUID();
-    private static final User EXISTING_USER = new UserBuilder().withUserId(USER_ID).build();
+    private static final User EXISTING_USER = UserBuilder.builder().withUserId(USER_ID).build();
     private static final String USERNAME = "test-username";
 
     private UsersDao usersDao = Mockito.mock(UsersDao.class);

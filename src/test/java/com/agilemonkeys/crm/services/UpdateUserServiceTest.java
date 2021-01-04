@@ -35,7 +35,7 @@ public class UpdateUserServiceTest {
     @Test(expected = CrmServiceApiStaleStateException.class)
     public void updateUser_should_throw_stale_state_exception_when_request_version_is_different_from_database() {
         Integer staleVersion = 10;
-        User newVersionUser = new UserBuilder().withVersion(11).build();
+        User newVersionUser = UserBuilder.builder().withVersion(11).build();
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(newVersionUser));
 
         UpdateUserRequest request = createRequest();
@@ -45,7 +45,7 @@ public class UpdateUserServiceTest {
     @Test(expected = CrmServiceApiStaleStateException.class)
     public void updateUser_should_throw_stale_state_exception_when_database_update_returns_0() {
         Integer version = 10;
-        User dbUser = new UserBuilder().withUserId(USER_ID).withVersion(version).build();
+        User dbUser = UserBuilder.builder().withUserId(USER_ID).withVersion(version).build();
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
         Mockito.when(usersDao.updateUser(Mockito.any(User.class), Mockito.eq(version))).thenReturn(0);
 
@@ -57,7 +57,7 @@ public class UpdateUserServiceTest {
     public void updateUser_should_propagate_exception_when_duplicatedUserService_throws_one() {
         Integer version = 10;
         UpdateUserRequest request = createRequest();
-        User dbUser = new UserBuilder().withUserId(USER_ID).withVersion(version).build();
+        User dbUser = UserBuilder.builder().withUserId(USER_ID).withVersion(version).build();
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
         Mockito.doThrow(new CrmServiceApiDuplicatedException("test")).when(duplicatedUserService).checkUsername(request.getUsername(), Optional.of(USER_ID));
 
@@ -67,7 +67,7 @@ public class UpdateUserServiceTest {
     @Test
     public void updateUser_should_update_user_when_version_matches() {
         Integer version = 10;
-        User dbUser = new UserBuilder().withUserId(USER_ID).withVersion(version).build();
+        User dbUser = UserBuilder.builder().withUserId(USER_ID).withVersion(version).build();
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
         Mockito.when(usersDao.updateUser(Mockito.any(User.class), Mockito.eq(version))).thenReturn(1);
 
@@ -90,7 +90,7 @@ public class UpdateUserServiceTest {
     @Test(expected = CrmServiceApiStaleStateException.class)
     public void updateRole_should_throw_stale_state_exception_when_request_version_is_different_from_database() {
         Integer staleVersion = 10;
-        User newVersionUser = new UserBuilder().withVersion(11).build();
+        User newVersionUser = UserBuilder.builder().withVersion(11).build();
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(newVersionUser));
 
         underTest.updateRole(USER_ID, staleVersion, UserRole.USER);
@@ -99,7 +99,7 @@ public class UpdateUserServiceTest {
     @Test(expected = CrmServiceApiStaleStateException.class)
     public void updateRole_should_throw_stale_state_exception_when_database_update_returns_0() {
         Integer version = 10;
-        User dbUser = new UserBuilder().withUserId(USER_ID).withVersion(version).build();
+        User dbUser = UserBuilder.builder().withUserId(USER_ID).withVersion(version).build();
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
         Mockito.when(usersDao.updateUser(Mockito.any(User.class), Mockito.eq(version))).thenReturn(0);
 
@@ -109,7 +109,7 @@ public class UpdateUserServiceTest {
     @Test
     public void updateRole_should_update_role_when_version_matches() {
         Integer version = 10;
-        User dbUser = new UserBuilder().withUserId(USER_ID).withVersion(version).withRole(UserRole.USER).build();
+        User dbUser = UserBuilder.builder().withUserId(USER_ID).withVersion(version).withRole(UserRole.USER).build();
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
         Mockito.when(usersDao.updateUser(Mockito.any(User.class), Mockito.eq(version))).thenReturn(1);
 
@@ -125,7 +125,7 @@ public class UpdateUserServiceTest {
 
     private void assertUserFields(User updatedUser, User previousVersionInDB, UpdateUserRequest request) {
         MatcherAssert.assertThat(updatedUser.getUserId(), Matchers.is(previousVersionInDB.getUserId()));
-        MatcherAssert.assertThat(updatedUser.getPassword(), Matchers.is(previousVersionInDB.getPassword()));
+        MatcherAssert.assertThat(updatedUser.getPasswordHash(), Matchers.is(previousVersionInDB.getPasswordHash()));
         MatcherAssert.assertThat(updatedUser.getCreatedDate(), Matchers.is(previousVersionInDB.getCreatedDate()));
         MatcherAssert.assertThat(updatedUser.getUpdatedDate(), Matchers.notNullValue());
         MatcherAssert.assertThat(updatedUser.getUpdatedDate(), Matchers.not(Matchers.is(previousVersionInDB.getUpdatedDate())));
@@ -145,7 +145,7 @@ public class UpdateUserServiceTest {
 
         MatcherAssert.assertThat(updatedUser.getName(), Matchers.is(previousVersionInDB.getName()));
         MatcherAssert.assertThat(updatedUser.getUsername(), Matchers.is(previousVersionInDB.getUsername()));
-        MatcherAssert.assertThat(updatedUser.getPassword(), Matchers.is(previousVersionInDB.getPassword()));
+        MatcherAssert.assertThat(updatedUser.getPasswordHash(), Matchers.is(previousVersionInDB.getPasswordHash()));
 
         MatcherAssert.assertThat(updatedUser.getRole(), Matchers.is(newRole));
     }

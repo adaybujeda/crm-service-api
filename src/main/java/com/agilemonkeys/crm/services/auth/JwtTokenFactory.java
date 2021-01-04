@@ -1,6 +1,7 @@
 package com.agilemonkeys.crm.services.auth;
 
 import com.agilemonkeys.crm.config.CrmJwtConfig;
+import com.agilemonkeys.crm.domain.CrmAuthToken;
 import com.agilemonkeys.crm.domain.UserRole;
 import io.fusionauth.jwt.Signer;
 import io.fusionauth.jwt.domain.JWT;
@@ -24,7 +25,7 @@ public class JwtTokenFactory {
         tokenTTLInSeconds = config.getTokenTimeToLive().toSeconds();
     }
 
-    public String createToken(UUID userId, UserRole role) {
+    public CrmAuthToken createToken(UUID userId, UserRole role) {
         JWT jwt = new JWT().setIssuer(CrmJwtConfig.ISSUER)
                 .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
                 .setSubject(userId.toString())
@@ -32,7 +33,8 @@ public class JwtTokenFactory {
                 .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusSeconds(tokenTTLInSeconds));
 
         String encodedJwtToken = JWT.getEncoder().encode(jwt, jwtTokenSigner);
-        log.info("action=createJwtToken result=success userId={} role={} ttl={}", userId, role, tokenTTLInSeconds);
-        return encodedJwtToken;
+        CrmAuthToken crmAuthToken = new CrmAuthToken(userId, tokenTTLInSeconds, encodedJwtToken);
+        log.info("action=createJwtToken result=success userId={} role={} crmAuthToken={}", userId, role, crmAuthToken);
+        return crmAuthToken;
     }
 }

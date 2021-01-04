@@ -24,7 +24,7 @@ public class GetUsersServiceTest {
         UUID notFoundId = UUID.randomUUID();
         Mockito.when(usersDao.getUserById(notFoundId)).thenReturn(Optional.empty());
 
-        underTest.getUser(notFoundId);
+        underTest.getUserById(notFoundId);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class GetUsersServiceTest {
         User dbUser = Mockito.mock(User.class);
         Mockito.when(usersDao.getUserById(userId)).thenReturn(Optional.of(dbUser));
 
-        User result = underTest.getUser(userId);
+        User result = underTest.getUserById(userId);
         MatcherAssert.assertThat(result, Matchers.is(dbUser));
     }
 

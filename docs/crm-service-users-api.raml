@@ -12,7 +12,7 @@ traits:
   authorized:
     description: Request authorization mechanism
     headers:
-      x-auth-token:
+      Authorization:
         required: true
 
 /crm/users:
@@ -46,7 +46,7 @@ traits:
                         "role": "admin"
                     }
         responses:
-            201:
+            200:
                 body:
                     application/json:
                         example: |

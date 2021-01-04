@@ -1,0 +1,47 @@
+#%RAML 1.0
+title: CRM Service API
+baseUri: http://localhost:8080
+version: 1.0
+mediaType: application/json
+traits:
+  unauthorized-error: !include unauthorized-error.raml
+  invalid-request-error: !include invalid-error.raml
+  authorized:
+    description: Request authorization mechanism
+    headers
+      Authorization:
+        required: true
+
+/crm/auth/login:
+    description: login resource to authenticate users
+    is: [invalid-request-error]
+    post:
+        body:
+            application/json:
+                 example: |
+                    {
+                        "username": "jsmith",
+                        "password": "some-password"
+                    }
+        responses:
+            200:
+                body:
+                    application/json:
+                        example: |
+                            {
+                                "authToken": "XVCJ9.eyJleHAiOjE2MDk3NzczMTIsI.CI6MTYwOTc3MzcxMiwiaX",
+                                "expiresIn": 3600,
+                            }
+/crm/auth/reset-password:
+    description: resource to update the password to a new value
+    is: [authorized, unauthorized-error, invalid-request-error]
+    post:
+        body:
+            application/json:
+                 example: |
+                    {
+                        "username": "jsmith",
+                        "newPassword": "some-password"
+                    }
+        responses:
+            204:

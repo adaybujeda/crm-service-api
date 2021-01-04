@@ -10,17 +10,23 @@ public class UserBuilder {
     private UUID userId;
     private String name;
     private String username;
-    private String password;
+    private String passwordHash;
     private UserRole role = UserRole.USER;
     private Integer version = 1;
     private LocalDateTime createdDate = LocalDateTime.now();
     private LocalDateTime updatedDate = LocalDateTime.now();
 
+    private UserBuilder(){
+    }
+
+    public static UserBuilder builder() {
+        return new UserBuilder();
+    }
     public static UserBuilder fromUser(User user) {
         return new UserBuilder().withUserId(user.getUserId())
                 .withName(user.getName())
                 .withNormalizedUsername(user.getUsername())
-                .withPassword(user.getPassword())
+                .withPasswordHash(user.getPasswordHash())
                 .withRole(user.getRole())
                 .withVersion(user.getVersion())
                 .withCreatedDate(user.getCreatedDate())
@@ -30,7 +36,6 @@ public class UserBuilder {
     public static UserBuilder fromRequest(CreateUserRequest request) {
         return new UserBuilder().withName(request.getName())
                 .withNormalizedUsername(request.getUsername())
-                .withPassword(request.getPassword())
                 .withRole(request.getRole());
     }
 
@@ -55,8 +60,8 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder withPassword(String password) {
-        this.password = password;
+    public UserBuilder withPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
         return this;
     }
 
@@ -81,6 +86,6 @@ public class UserBuilder {
     }
 
     public User build() {
-        return new User(userId, name, username, password, role, version, createdDate, updatedDate);
+        return new User(userId, name, username, passwordHash, role, version, createdDate, updatedDate);
     }
 }

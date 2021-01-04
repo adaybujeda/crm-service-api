@@ -12,18 +12,18 @@ public class User {
     private final UUID userId;
     private final String name;
     private final String username;
-    private final String password;
+    private final String passwordHash;
     private final UserRole role;
     private final Integer version;
     private final LocalDateTime createdDate;
     private final LocalDateTime updatedDate;
 
-    @ConstructorProperties({"user_id", "name", "username", "password", "role", "version", "created_date", "updated_date"})
-    public User(UUID userId, String name, String username, String password, UserRole role, Integer version, LocalDateTime createdDate, LocalDateTime updatedDate) {
+    @ConstructorProperties({"user_id", "name", "username", "password_hash", "role", "version", "created_date", "updated_date"})
+    public User(UUID userId, String name, String username, String passwordHash, UserRole role, Integer version, LocalDateTime createdDate, LocalDateTime updatedDate) {
         this.userId = userId;
         this.name = name;
         this.username = username;
-        this.password = password;
+        this.passwordHash = passwordHash;
         this.role = role;
         this.version = version;
         this.createdDate = createdDate;
@@ -42,8 +42,8 @@ public class User {
         return username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
     public UserRole getRole() {
@@ -70,7 +70,7 @@ public class User {
         return Objects.equals(this.userId, other.userId)
                 && Objects.equals(this.name, other.name)
                 && Objects.equals(this.username, other.username)
-                && Objects.equals(this.password, other.password)
+                && Objects.equals(this.passwordHash, other.passwordHash)
                 && Objects.equals(this.role, other.role)
                 && Objects.equals(this.version, other.version)
                 && Objects.equals(this.createdDate, other.createdDate)
@@ -81,7 +81,7 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(
-                this.userId, this.name, this.username, this.password, this.role, this.version, this.createdDate, this.updatedDate);
+                this.userId, this.name, this.username, this.passwordHash, this.role, this.version, this.createdDate, this.updatedDate);
 
     }
 

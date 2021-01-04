@@ -34,7 +34,7 @@ public class UpdateUserService {
 
         User newUser = UserBuilder.fromRequest(updateRequest)
                 .withUserId(userId)
-                .withPassword(oldUser.getPassword())
+                .withPasswordHash(oldUser.getPasswordHash())
                 .withVersion(oldUser.getVersion() + 1)
                 .withCreatedDate(oldUser.getCreatedDate())
                 .build();

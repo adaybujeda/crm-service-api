@@ -20,13 +20,19 @@ public class GetUsersService {
         this.usersDao = usersDao;
     }
 
-    public User getUser(UUID userId) {
+    public User getUserById(UUID userId) {
         Optional<User> user = usersDao.getUserById(userId);
         if(!user.isPresent()) {
             throw new CrmServiceApiNotFoundException(String.format("UserId: %s not found", userId));
         }
-        log.info("action=getUser result=success userId={} user={}", userId, user.get());
+        log.info("action=getUserById result=success userId={} user={}", userId, user.get());
         return user.get();
+    }
+
+    public Optional<User> getUserByUsername(String username) {
+        Optional<User> user = usersDao.getUserByUsername(username);
+        log.info("action=getUserByUsername result=success username={} user={}", username, user.orElse(null));
+        return user;
     }
 
     public List<User> getAllUsers() {

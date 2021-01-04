@@ -11,11 +11,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UsersDao {
-    @SqlUpdate("INSERT INTO users (user_id, name, username, password, role, version, created_date, updated_date) " +
-               "VALUES (:userId, :name, :username, :password, :role, :version, :createdDate, :updatedDate)")
+    @SqlUpdate("INSERT INTO users (user_id, name, username, password_hash, role, version, created_date, updated_date) " +
+               "VALUES (:userId, :name, :username, :passwordHash, :role, :version, :createdDate, :updatedDate)")
     public int insertUser(@BindBean User user);
 
-    @SqlUpdate("UPDATE users SET name=:name, username=:username, password=:password, role=:role, version=:version, updated_date=:updatedDate " +
+    @SqlUpdate("UPDATE users SET name=:name, username=:username, password_hash=:passwordHash, role=:role, version=:version, updated_date=:updatedDate " +
                "WHERE user_id=:userId AND version=:oldVersion")
     public int updateUser(@BindBean User user, @Bind("oldVersion") Integer oldVersion);
 

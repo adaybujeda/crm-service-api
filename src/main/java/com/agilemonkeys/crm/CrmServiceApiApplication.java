@@ -1,16 +1,18 @@
 package com.agilemonkeys.crm;
 
+import com.agilemonkeys.crm.CrmAuthFactory.CrmAuthContext;
 import com.agilemonkeys.crm.config.CrmServiceApiConfiguration;
 import com.agilemonkeys.crm.domain.User;
-import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiExceptionMapper;
 import com.agilemonkeys.crm.exceptions.ValidationExceptionMapper;
 import com.agilemonkeys.crm.resources.CreateUserResource;
 import com.agilemonkeys.crm.resources.DeleteUserResource;
 import com.agilemonkeys.crm.resources.GetUsersResource;
 import com.agilemonkeys.crm.resources.UpdateUserResource;
+import com.agilemonkeys.crm.resources.auth.LoginResource;
 import com.agilemonkeys.crm.services.*;
-import com.agilemonkeys.crm.services.auth.JwtTokenFactory;
+import com.agilemonkeys.crm.services.auth.CrmPasswordHashService;
+import com.agilemonkeys.crm.services.auth.LoginService;
 import com.agilemonkeys.crm.storage.UsersDao;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -24,8 +26,6 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.UUID;
 
 public class CrmServiceApiApplication extends Application<CrmServiceApiConfiguration> {
 
@@ -61,20 +61,24 @@ public class CrmServiceApiApplication extends Application<CrmServiceApiConfigura
         log.info("action=db-init driver={} dbUrl={}", config.getDataSource().getDriverClass(), config.getDataSource().getUrl());
 
         //AUTH SETUP
-        new CrmAuthFactory().init(config, environment);
+        CrmAuthContext authContext = new CrmAuthFactory().init(config, environment);
 
         //EXCEPTIONS
         environment.jersey().register(new ValidationExceptionMapper(new JerseyViolationExceptionMapper()));
         environment.jersey().register(new CrmServiceApiExceptionMapper());
 
         //SERVICES
+        CrmPasswordHashService passwordHashService = new CrmPasswordHashService();
         DuplicatedUserService duplicatedUserService = new DuplicatedUserService(usersDao);
         GetUsersService getUsersService = new GetUsersService(usersDao);
-        CreateUserService createUserService = new CreateUserService(usersDao, duplicatedUserService);
+        CreateUserService createUserService = new CreateUserService(usersDao, duplicatedUserService, passwordHashService);
         UpdateUserService updateUserService = new UpdateUserService(usersDao, duplicatedUserService);
         DeleteUserService deleteUserService = new DeleteUserService(usersDao);
 
+        LoginService loginService = new LoginService(getUsersService, authContext.getJwtTokenFactory(), passwordHashService);
+
         //RESOURCES
+        environment.jersey().register(new LoginResource(loginService));
         environment.jersey().register(new GetUsersResource(getUsersService));
         environment.jersey().register(new CreateUserResource(createUserService));
         environment.jersey().register(new UpdateUserResource(updateUserService));

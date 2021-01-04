@@ -19,9 +19,6 @@ public interface UsersDao {
                "WHERE user_id=:userId AND version=:oldVersion")
     public int updateUser(@BindBean User user, @Bind("oldVersion") Integer oldVersion);
 
-    @SqlUpdate("UPDATE users SET password_hash=:passwordHash WHERE user_id=:userId")
-    public int updatePassword(@Bind("userId") UUID userId, @Bind("passwordHash") String passwordHash);
-
     @SqlUpdate("DELETE FROM users WHERE user_id=:userId")
     public int deleteUser(@Bind("userId") UUID userId);
 

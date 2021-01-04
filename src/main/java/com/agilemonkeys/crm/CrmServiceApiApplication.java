@@ -10,9 +10,11 @@ import com.agilemonkeys.crm.resources.DeleteUserResource;
 import com.agilemonkeys.crm.resources.GetUsersResource;
 import com.agilemonkeys.crm.resources.UpdateUserResource;
 import com.agilemonkeys.crm.resources.auth.LoginResource;
+import com.agilemonkeys.crm.resources.auth.ResetPasswordResource;
 import com.agilemonkeys.crm.services.*;
 import com.agilemonkeys.crm.services.auth.CrmPasswordHashService;
 import com.agilemonkeys.crm.services.auth.LoginService;
+import com.agilemonkeys.crm.services.auth.ResetPasswordService;
 import com.agilemonkeys.crm.storage.UsersDao;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -76,9 +78,11 @@ public class CrmServiceApiApplication extends Application<CrmServiceApiConfigura
         DeleteUserService deleteUserService = new DeleteUserService(usersDao);
 
         LoginService loginService = new LoginService(getUsersService, authContext.getJwtTokenFactory(), passwordHashService);
+        ResetPasswordService resetPasswordService = new ResetPasswordService(getUsersService, updateUserService, passwordHashService);
 
         //RESOURCES
         environment.jersey().register(new LoginResource(loginService));
+        environment.jersey().register(new ResetPasswordResource(resetPasswordService));
         environment.jersey().register(new GetUsersResource(getUsersService));
         environment.jersey().register(new CreateUserResource(createUserService));
         environment.jersey().register(new UpdateUserResource(updateUserService));

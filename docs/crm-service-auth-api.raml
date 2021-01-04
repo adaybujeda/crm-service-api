@@ -33,14 +33,13 @@ traits:
                                 "expiresIn": 3600,
                             }
 /crm/auth/reset-password:
-    description: resource to update the password to a new value
+    description: resource to update the authenticated user to a new value
     is: [authorized, unauthorized-error, invalid-request-error]
     post:
         body:
             application/json:
                  example: |
                     {
-                        "username": "jsmith",
                         "newPassword": "some-password"
                     }
         responses:

@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UpdateUserServiceTest {
+public class UpdateUserServiceFromRequestTest {
 
     private static final UUID USER_ID = UUID.randomUUID();
 
@@ -81,48 +81,6 @@ public class UpdateUserServiceTest {
         assertUserFields(resultInDatabase.getValue(), dbUser, request);
     }
 
-    @Test(expected = CrmServiceApiNotFoundException.class)
-    public void updateRole_should_throw_not_found_exception_when_userId_not_in_database() {
-        Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.empty());
-        underTest.updateRole(USER_ID, 10, UserRole.USER);
-    }
-
-    @Test(expected = CrmServiceApiStaleStateException.class)
-    public void updateRole_should_throw_stale_state_exception_when_request_version_is_different_from_database() {
-        Integer staleVersion = 10;
-        User newVersionUser = UserBuilder.builder().withVersion(11).build();
-        Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(newVersionUser));
-
-        underTest.updateRole(USER_ID, staleVersion, UserRole.USER);
-    }
-
-    @Test(expected = CrmServiceApiStaleStateException.class)
-    public void updateRole_should_throw_stale_state_exception_when_database_update_returns_0() {
-        Integer version = 10;
-        User dbUser = UserBuilder.builder().withUserId(USER_ID).withVersion(version).build();
-        Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
-        Mockito.when(usersDao.updateUser(Mockito.any(User.class), Mockito.eq(version))).thenReturn(0);
-
-        underTest.updateRole(USER_ID, version, UserRole.USER);
-    }
-
-    @Test
-    public void updateRole_should_update_role_when_version_matches() {
-        Integer version = 10;
-        User dbUser = UserBuilder.builder().withUserId(USER_ID).withVersion(version).withRole(UserRole.USER).build();
-        Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
-        Mockito.when(usersDao.updateUser(Mockito.any(User.class), Mockito.eq(version))).thenReturn(1);
-
-        UserRole newRole = UserRole.ADMIN;
-        User result = underTest.updateRole(USER_ID, version, newRole);
-
-        ArgumentCaptor<User> resultInDatabase = ArgumentCaptor.forClass(User.class);
-        Mockito.verify(usersDao).updateUser(resultInDatabase.capture(), Mockito.eq(version));
-
-        assertUpdateRoleUserFields(result, newRole, dbUser);
-        assertUpdateRoleUserFields(resultInDatabase.getValue(), newRole, dbUser);
-    }
-
     private void assertUserFields(User updatedUser, User previousVersionInDB, UpdateUserRequest request) {
         MatcherAssert.assertThat(updatedUser.getUserId(), Matchers.is(previousVersionInDB.getUserId()));
         MatcherAssert.assertThat(updatedUser.getPasswordHash(), Matchers.is(previousVersionInDB.getPasswordHash()));
@@ -134,20 +92,6 @@ public class UpdateUserServiceTest {
         MatcherAssert.assertThat(updatedUser.getName(), Matchers.is(request.getName()));
         MatcherAssert.assertThat(updatedUser.getUsername(), Matchers.is(request.getUsername()));
         MatcherAssert.assertThat(updatedUser.getRole(), Matchers.is(request.getRole()));
-    }
-
-    private void assertUpdateRoleUserFields(User updatedUser, UserRole newRole, User previousVersionInDB) {
-        MatcherAssert.assertThat(updatedUser.getUserId(), Matchers.is(previousVersionInDB.getUserId()));
-        MatcherAssert.assertThat(updatedUser.getCreatedDate(), Matchers.is(previousVersionInDB.getCreatedDate()));
-        MatcherAssert.assertThat(updatedUser.getUpdatedDate(), Matchers.notNullValue());
-        MatcherAssert.assertThat(updatedUser.getUpdatedDate(), Matchers.not(Matchers.is(previousVersionInDB.getUpdatedDate())));
-        MatcherAssert.assertThat(updatedUser.getVersion(), Matchers.is(previousVersionInDB.getVersion() + 1));
-
-        MatcherAssert.assertThat(updatedUser.getName(), Matchers.is(previousVersionInDB.getName()));
-        MatcherAssert.assertThat(updatedUser.getUsername(), Matchers.is(previousVersionInDB.getUsername()));
-        MatcherAssert.assertThat(updatedUser.getPasswordHash(), Matchers.is(previousVersionInDB.getPasswordHash()));
-
-        MatcherAssert.assertThat(updatedUser.getRole(), Matchers.is(newRole));
     }
 
     private UpdateUserRequest createRequest() {

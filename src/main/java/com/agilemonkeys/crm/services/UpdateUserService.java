@@ -39,7 +39,12 @@ public class UpdateUserService {
                 .withCreatedDate(oldUser.getCreatedDate())
                 .build();
 
-        return updateStorage(UPDATE_USER, newUser, requestVersion);
+        return updateUser(requestVersion, newUser);
+    }
+
+    public User updateUser(Integer currentVersion, User newUser) {
+        duplicatedUserService.checkUsername(newUser.getUsername(), Optional.of(newUser.getUserId()));
+        return updateStorage(UPDATE_USER, newUser, currentVersion);
     }
 
     public User updateRole(UUID userId, Integer requestVersion, UserRole newRole) {

@@ -78,6 +78,10 @@ This will be a problem once the users or customer collection reaches a certain n
 
 Could be added at a later point, but clients will have to be updated to get the full list of items.
 
+**JWT tokens:**
+These are generated containing the user role. Tokens could have the wrong role or be valid for a deleted user until it expires.  
+An additional validation could be done when decoding the token, but decided not to implement it for simplicity and performance.
+
 **Usernames:**
 As there are no explicit requirements, usernames are case-insensitive.
 

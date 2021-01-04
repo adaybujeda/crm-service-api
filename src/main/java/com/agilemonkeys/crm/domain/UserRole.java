@@ -3,6 +3,10 @@ package com.agilemonkeys.crm.domain;
 public enum UserRole {
     ADMIN, USER;
 
+    //KEEP IN SYNC ^^
+    public static final String ADMIN_STRING = "ADMIN";
+    public static final String USER_STRING = "USER";
+
     public boolean isEqual(String stringRole) {
         if (stringRole == null || stringRole.isEmpty()) {
             return false;

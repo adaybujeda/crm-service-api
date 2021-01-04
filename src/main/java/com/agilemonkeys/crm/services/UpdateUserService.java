@@ -66,7 +66,7 @@ public class UpdateUserService {
 
         if (!oldUser.get().getVersion().equals(requestVersion)) {
             log.warn("action={} step=checkExistingUserState result=staleState userId={} requestVersion={} dbUser={}", action, userId, requestVersion, oldUser.get());
-            throw new CrmServiceApiStaleStateException(String.format("State state for userId: %s request version: %s found: %s", userId, requestVersion, oldUser.get().getVersion()));
+            throw new CrmServiceApiStaleStateException(String.format("Invalid state for userId: %s request version: %s found: %s", userId, requestVersion, oldUser.get().getVersion()));
         }
 
         return oldUser.get();

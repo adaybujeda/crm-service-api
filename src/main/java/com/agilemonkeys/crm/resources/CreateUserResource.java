@@ -1,10 +1,12 @@
 package com.agilemonkeys.crm.resources;
 
 import com.agilemonkeys.crm.domain.User;
+import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.services.CreateUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -15,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 @Path("/crm/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed(UserRole.ADMIN_STRING)
 public class CreateUserResource {
 
     private static final Logger log = LoggerFactory.getLogger(CreateUserResource.class);

@@ -1,10 +1,12 @@
 package com.agilemonkeys.crm.resources;
 
 import com.agilemonkeys.crm.domain.User;
+import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.services.UpdateUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -16,6 +18,7 @@ import java.util.UUID;
 @Path("/crm/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@RolesAllowed(UserRole.ADMIN_STRING)
 public class UpdateUserResource {
 
     private static final Logger log = LoggerFactory.getLogger(UpdateUserResource.class);

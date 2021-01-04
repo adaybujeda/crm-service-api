@@ -8,6 +8,7 @@ import io.dropwizard.auth.Auth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -20,7 +21,7 @@ import javax.ws.rs.core.Response;
 @Path("/auth/reset-password")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RolesAllowed(UserRole.ADMIN_STRING)
+@PermitAll
 public class ResetPasswordResource {
 
     private static final Logger log = LoggerFactory.getLogger(ResetPasswordResource.class);

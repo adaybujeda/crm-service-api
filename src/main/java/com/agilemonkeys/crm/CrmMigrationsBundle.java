@@ -1,5 +1,6 @@
 package com.agilemonkeys.crm;
 
+import com.agilemonkeys.crm.config.CrmServiceApiConfiguration;
 import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.migrations.MigrationsBundle;
 

@@ -6,7 +6,7 @@ import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiDuplicatedException;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiNotFoundException;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiStaleStateException;
-import com.agilemonkeys.crm.resources.CreateUpdateUserRequest;
+import com.agilemonkeys.crm.resources.UpdateUserRequest;
 import com.agilemonkeys.crm.storage.UsersDao;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -38,7 +38,7 @@ public class UpdateUserServiceTest {
         User newVersionUser = new UserBuilder().withVersion(11).build();
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(newVersionUser));
 
-        CreateUpdateUserRequest request = createRequest();
+        UpdateUserRequest request = createRequest();
         underTest.updateUser(USER_ID, staleVersion, request);
     }
 
@@ -49,14 +49,14 @@ public class UpdateUserServiceTest {
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
         Mockito.when(usersDao.updateUser(Mockito.any(User.class), Mockito.eq(version))).thenReturn(0);
 
-        CreateUpdateUserRequest request = createRequest();
+        UpdateUserRequest request = createRequest();
         underTest.updateUser(USER_ID, version, request);
     }
 
     @Test(expected = CrmServiceApiDuplicatedException.class)
     public void updateUser_should_propagate_exception_when_duplicatedUserService_throws_one() {
         Integer version = 10;
-        CreateUpdateUserRequest request = createRequest();
+        UpdateUserRequest request = createRequest();
         User dbUser = new UserBuilder().withUserId(USER_ID).withVersion(version).build();
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
         Mockito.doThrow(new CrmServiceApiDuplicatedException("test")).when(duplicatedUserService).checkUsername(request.getUsername(), Optional.of(USER_ID));
@@ -71,7 +71,7 @@ public class UpdateUserServiceTest {
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
         Mockito.when(usersDao.updateUser(Mockito.any(User.class), Mockito.eq(version))).thenReturn(1);
 
-        CreateUpdateUserRequest request = createRequest();
+        UpdateUserRequest request = createRequest();
         User result = underTest.updateUser(USER_ID, version, request);
 
         ArgumentCaptor<User> resultInDatabase = ArgumentCaptor.forClass(User.class);
@@ -123,8 +123,9 @@ public class UpdateUserServiceTest {
         assertUpdateRoleUserFields(resultInDatabase.getValue(), newRole, dbUser);
     }
 
-    private void assertUserFields(User updatedUser, User previousVersionInDB, CreateUpdateUserRequest request) {
+    private void assertUserFields(User updatedUser, User previousVersionInDB, UpdateUserRequest request) {
         MatcherAssert.assertThat(updatedUser.getUserId(), Matchers.is(previousVersionInDB.getUserId()));
+        MatcherAssert.assertThat(updatedUser.getPassword(), Matchers.is(previousVersionInDB.getPassword()));
         MatcherAssert.assertThat(updatedUser.getCreatedDate(), Matchers.is(previousVersionInDB.getCreatedDate()));
         MatcherAssert.assertThat(updatedUser.getUpdatedDate(), Matchers.notNullValue());
         MatcherAssert.assertThat(updatedUser.getUpdatedDate(), Matchers.not(Matchers.is(previousVersionInDB.getUpdatedDate())));
@@ -132,7 +133,6 @@ public class UpdateUserServiceTest {
 
         MatcherAssert.assertThat(updatedUser.getName(), Matchers.is(request.getName()));
         MatcherAssert.assertThat(updatedUser.getUsername(), Matchers.is(request.getUsername()));
-        MatcherAssert.assertThat(updatedUser.getPassword(), Matchers.is(request.getPassword()));
         MatcherAssert.assertThat(updatedUser.getRole(), Matchers.is(request.getRole()));
     }
 
@@ -150,8 +150,8 @@ public class UpdateUserServiceTest {
         MatcherAssert.assertThat(updatedUser.getRole(), Matchers.is(newRole));
     }
 
-    private CreateUpdateUserRequest createRequest() {
-        return new CreateUpdateUserRequest("name", "username", "password", UserRole.ADMIN);
+    private UpdateUserRequest createRequest() {
+        return new UpdateUserRequest("name", "username", UserRole.ADMIN);
     }
 
 }

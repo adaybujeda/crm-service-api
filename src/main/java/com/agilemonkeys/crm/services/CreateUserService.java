@@ -2,7 +2,7 @@ package com.agilemonkeys.crm.services;
 
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
-import com.agilemonkeys.crm.resources.CreateUpdateUserRequest;
+import com.agilemonkeys.crm.resources.CreateUserRequest;
 import com.agilemonkeys.crm.storage.UsersDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class CreateUserService {
         this.duplicatedUserService = duplicatedUserService;
     }
 
-    public User createUser(CreateUpdateUserRequest createRequest) {
+    public User createUser(CreateUserRequest createRequest) {
         duplicatedUserService.checkUsername(createRequest.getUsername(), Optional.empty());
         UUID newUserId = UUID.randomUUID();
         User newUser = UserBuilder.fromRequest(createRequest).withUserId(newUserId).build();

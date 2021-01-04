@@ -1,7 +1,7 @@
 package com.agilemonkeys.crm.storage;
 
 import com.agilemonkeys.crm.CrmServiceApiApplication;
-import com.agilemonkeys.crm.CrmServiceApiConfiguration;
+import com.agilemonkeys.crm.config.CrmServiceApiConfiguration;
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
 import com.agilemonkeys.crm.domain.UserRole;
@@ -116,7 +116,7 @@ public class UsersDaoTest {
     private User createUser(UUID userId, String username, Integer version) {
         String name = UUID.randomUUID().toString();
         String password = UUID.randomUUID().toString();
-        User newUser = new UserBuilder().withUserId(userId).withName(name).withUsername(username).withPassword(password)
+        User newUser = new UserBuilder().withUserId(userId).withName(name).withNormalizedUsername(username).withPassword(password)
                 .withVersion(version).build();
         return newUser;
     }

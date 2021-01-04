@@ -33,6 +33,9 @@ To keep it simple, I am going to use an SQL solution. For local development, I w
 Between the different off-the-shelve options that Dropwizard provides to interact with SQL databases, I have selected **JDBI3**.
 It provides a simple SQL interface, easy to implement and understand by developers. As well, because I have some previous experience with it.
 
+I have taken a look at Hibernate, it looks like a better approach, but need I need more time to understand it better before I can use it.
+For things like this, we usually create a new story, important but not critical, and move it to the next phase of the project.
+
 Other considerations when selecting storage:
 * Has the company invested in a certain storage technology/cluster.
 * What is the expertise in the team/company for certain types, engines and libraries.
@@ -42,6 +45,31 @@ Other considerations when selecting storage:
 This might have been a bit too much for this project, but I wanted to show that automating DB changes are an important part of the dev lifecycle.
 
 The idea is to execute the migrations on every deployment to keep the DB and code in sync.
+
+## Credentials Management
+As per requirements, the system should manage Users and provide an authentication mechanism.
+The authentication mechanism that I have chosen is to validate a username and password through a login WS.
+The service will return a JWT token that will be used to authorize requests to the system.
+
+I am not a security expert, but there are some basics that the system should implement to make the credentials secure:
+* Do not store plain text passwords
+* Store password using a non-reversible cryptographic function
+* Do not return the password field in WS responses.
+
+In order to follow these basic requirements, I will be implementing the following:
+* Store the password hash in the database and discard the original.
+* A login WS to authenticate users comparing the hashes.
+* The update user WS will not support the password field.
+* A reset password WS to set a new password.
+
+### Password hash
+For the hash function, after ready some articles on password security, I am going to use BCrypt.  
+Spring security offers a great utilities for hashing:
+`spring-security-crypto` - `org.springframework.security.crypto.bcrypt.BCrypt`
+
+### JWT libraries
+After taking a look at the libraries recommended by the JWT site: `https://jwt.io/`, `fusionauth-jwt` offered the implementation that I needed for the tokens, it is easy to use and provided by a well established company in the auth space.  
+`https://github.com/FusionAuth/fusionauth-jwt`
 
 ## Technical Notes
 **Resource Collections - Pagination:**
@@ -55,6 +83,10 @@ As there are no explicit requirements, usernames are case-insensitive.
 
 **Delete User:**
 To be client friendly, deletes are always successful regardless of whether a user was deleted or not.
+
+**ForbiddenException:**
+When a request is authenticated, but the role is not authorized for a particular resource, Dropwizard returns a 403 with tha custom error message.
+This message is not consistent with the other error messages. We should create a new ExceptionMapper to fix this.
 
 **SSL:**
 Should we use SSL for the final hop to access this service?

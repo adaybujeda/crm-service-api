@@ -32,7 +32,8 @@ public class CrmServiceApiExceptionMapperTest {
         MatcherAssert.assertThat(response.getStatus(), Matchers.is(HttpStatus.PRECONDITION_FAILED_412));
         MatcherAssert.assertThat(response.getEntity(), Matchers.instanceOf(ValidationErrorMessage.class));
         ValidationErrorMessage error = (ValidationErrorMessage) response.getEntity();
-        MatcherAssert.assertThat(error.getErrors(), Matchers.is(Arrays.asList("message")));    }
+        MatcherAssert.assertThat(error.getErrors(), Matchers.is(Arrays.asList("message")));
+    }
 
     @Test
     public void should_return_a_response_with_409_and_error_message_when_CrmServiceApiDuplicatedException() {
@@ -42,5 +43,17 @@ public class CrmServiceApiExceptionMapperTest {
         MatcherAssert.assertThat(response.getStatus(), Matchers.is(HttpStatus.CONFLICT_409));
         MatcherAssert.assertThat(response.getEntity(), Matchers.instanceOf(ValidationErrorMessage.class));
         ValidationErrorMessage error = (ValidationErrorMessage) response.getEntity();
-        MatcherAssert.assertThat(error.getErrors(), Matchers.is(Arrays.asList("message")));    }
+        MatcherAssert.assertThat(error.getErrors(), Matchers.is(Arrays.asList("message")));
+    }
+
+    @Test
+    public void should_return_a_response_with_401_and_error_message_when_CrmServiceApiAuthException() {
+        CrmServiceApiAuthException exception = new CrmServiceApiAuthException("message");
+        Response response = underTest.toResponse(exception);
+
+        MatcherAssert.assertThat(response.getStatus(), Matchers.is(HttpStatus.UNAUTHORIZED_401));
+        MatcherAssert.assertThat(response.getEntity(), Matchers.instanceOf(ValidationErrorMessage.class));
+        ValidationErrorMessage error = (ValidationErrorMessage) response.getEntity();
+        MatcherAssert.assertThat(error.getErrors(), Matchers.is(Arrays.asList("message")));
+    }
 }

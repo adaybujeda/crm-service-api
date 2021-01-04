@@ -1,6 +1,7 @@
 package com.agilemonkeys.crm.domain;
 
-import com.agilemonkeys.crm.resources.CreateUpdateUserRequest;
+import com.agilemonkeys.crm.resources.CreateUserRequest;
+import com.agilemonkeys.crm.resources.UpdateUserRequest;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,7 +19,7 @@ public class UserBuilder {
     public static UserBuilder fromUser(User user) {
         return new UserBuilder().withUserId(user.getUserId())
                 .withName(user.getName())
-                .withUsername(user.getUsername())
+                .withNormalizedUsername(user.getUsername())
                 .withPassword(user.getPassword())
                 .withRole(user.getRole())
                 .withVersion(user.getVersion())
@@ -26,10 +27,16 @@ public class UserBuilder {
                 .withUpdatedDate(user.getUpdatedDate());
     }
 
-    public static UserBuilder fromRequest(CreateUpdateUserRequest request) {
+    public static UserBuilder fromRequest(CreateUserRequest request) {
         return new UserBuilder().withName(request.getName())
-                .withUsername(request.getUsername())
+                .withNormalizedUsername(request.getUsername())
                 .withPassword(request.getPassword())
+                .withRole(request.getRole());
+    }
+
+    public static UserBuilder fromRequest(UpdateUserRequest request) {
+        return new UserBuilder().withName(request.getName())
+                .withNormalizedUsername(request.getUsername())
                 .withRole(request.getRole());
     }
 
@@ -43,8 +50,8 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder withUsername(String username) {
-        this.username = username;
+    public UserBuilder withNormalizedUsername(String username) {
+        this.username = username == null ? null : username.trim().toLowerCase();
         return this;
     }
 

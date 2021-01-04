@@ -28,7 +28,7 @@ public class UpdateUserResource {
 
     @PUT
     @Path("/{userId}")
-    public Response updateUser(@PathParam("userId") UUID userId, @NotNull @HeaderParam(HttpHeaders.IF_MATCH) Integer version, @Valid CreateUpdateUserRequest request) {
+    public Response updateUser(@PathParam("userId") UUID userId, @NotNull @HeaderParam(HttpHeaders.IF_MATCH) Integer version, @Valid UpdateUserRequest request) {
         User updatedUser = updateUserService.updateUser(userId, version, request);
         log.info("action=updateUser result=success userId={}", userId);
         return Response.noContent().build();

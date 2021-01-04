@@ -1,6 +1,8 @@
 package com.agilemonkeys.crm;
 
+import com.agilemonkeys.crm.config.CrmServiceApiConfiguration;
 import com.agilemonkeys.crm.domain.User;
+import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiExceptionMapper;
 import com.agilemonkeys.crm.exceptions.ValidationExceptionMapper;
 import com.agilemonkeys.crm.resources.CreateUserResource;
@@ -8,6 +10,7 @@ import com.agilemonkeys.crm.resources.DeleteUserResource;
 import com.agilemonkeys.crm.resources.GetUsersResource;
 import com.agilemonkeys.crm.resources.UpdateUserResource;
 import com.agilemonkeys.crm.services.*;
+import com.agilemonkeys.crm.services.auth.JwtTokenFactory;
 import com.agilemonkeys.crm.storage.UsersDao;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
@@ -21,6 +24,8 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.UUID;
 
 public class CrmServiceApiApplication extends Application<CrmServiceApiConfiguration> {
 
@@ -47,14 +52,16 @@ public class CrmServiceApiApplication extends Application<CrmServiceApiConfigura
     }
 
     @Override
-    public void run(final CrmServiceApiConfiguration config,
-                    final Environment environment) {
+    public void run(final CrmServiceApiConfiguration config, final Environment environment) {
         //CREATE DB CONNECTION POOL
         final JdbiFactory factory = new JdbiFactory();
         final Jdbi jdbi = factory.build(environment, config.getDataSource(), "crmDatabase");
         jdbi.registerRowMapper(ConstructorMapper.factory(User.class));
         UsersDao usersDao = jdbi.onDemand(UsersDao.class);
         log.info("action=db-init driver={} dbUrl={}", config.getDataSource().getDriverClass(), config.getDataSource().getUrl());
+
+        //AUTH SETUP
+        new CrmAuthFactory().init(config, environment);
 
         //EXCEPTIONS
         environment.jersey().register(new ValidationExceptionMapper(new JerseyViolationExceptionMapper()));

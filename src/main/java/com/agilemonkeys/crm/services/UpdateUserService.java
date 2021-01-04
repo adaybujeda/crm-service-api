@@ -5,7 +5,7 @@ import com.agilemonkeys.crm.domain.UserBuilder;
 import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiNotFoundException;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiStaleStateException;
-import com.agilemonkeys.crm.resources.CreateUpdateUserRequest;
+import com.agilemonkeys.crm.resources.UpdateUserRequest;
 import com.agilemonkeys.crm.storage.UsersDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +28,13 @@ public class UpdateUserService {
         this.duplicatedUserService = duplicatedUserService;
     }
 
-    public User updateUser(UUID userId, Integer requestVersion, CreateUpdateUserRequest updateRequest) {
+    public User updateUser(UUID userId, Integer requestVersion, UpdateUserRequest updateRequest) {
         User oldUser = checkExistingUserState(UPDATE_USER, userId, requestVersion);
         duplicatedUserService.checkUsername(updateRequest.getUsername(), Optional.of(userId));
 
         User newUser = UserBuilder.fromRequest(updateRequest)
                 .withUserId(userId)
+                .withPassword(oldUser.getPassword())
                 .withVersion(oldUser.getVersion() + 1)
                 .withCreatedDate(oldUser.getCreatedDate())
                 .build();

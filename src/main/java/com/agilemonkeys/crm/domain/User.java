@@ -9,20 +9,20 @@ import java.util.UUID;
 
 public class User {
 
-    private UUID userId;
-    private String name;
-    private String username;
-    private String password;
-    private UserRole role;
-    private Integer version;
-    private LocalDateTime createdDate;
-    private LocalDateTime updatedDate;
+    private final UUID userId;
+    private final String name;
+    private final String username;
+    private final String password;
+    private final UserRole role;
+    private final Integer version;
+    private final LocalDateTime createdDate;
+    private final LocalDateTime updatedDate;
 
     @ConstructorProperties({"user_id", "name", "username", "password", "role", "version", "created_date", "updated_date"})
     public User(UUID userId, String name, String username, String password, UserRole role, Integer version, LocalDateTime createdDate, LocalDateTime updatedDate) {
         this.userId = userId;
         this.name = name;
-        this.username = username == null ? null : username.toLowerCase();
+        this.username = username;
         this.password = password;
         this.role = role;
         this.version = version;

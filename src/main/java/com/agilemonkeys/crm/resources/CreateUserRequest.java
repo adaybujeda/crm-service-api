@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class CreateUpdateUserRequest {
+public class CreateUserRequest {
 
     @NotEmpty
     @Size(min = 1, max = 100)
@@ -23,7 +23,7 @@ public class CreateUpdateUserRequest {
     private UserRole role;
 
     @JsonCreator
-    public CreateUpdateUserRequest(@JsonProperty("name") String name, @JsonProperty("username") String username, @JsonProperty("password") String password, @JsonProperty("role") UserRole role) {
+    public CreateUserRequest(@JsonProperty("name") String name, @JsonProperty("username") String username, @JsonProperty("password") String password, @JsonProperty("role") UserRole role) {
         this.name = name;
         this.username = username;
         this.password = password;

@@ -6,6 +6,10 @@ server:
     - type: http
       port: ${ADMIN_PORT:-8081}
 
+jwtConfig:
+  secret: ${JWT_SECRET:-toomanysecrets}
+  tokenTimeToLive: ${JWT_TTL:-60 minute}
+
 dataSource:
   #driverClass: ${DB_DRIVER:-org.hsqldb.jdbc.JDBCDriver}
   driverClass: ${DB_DRIVER:-org.h2.Driver}

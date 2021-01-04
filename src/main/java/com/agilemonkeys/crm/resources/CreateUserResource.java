@@ -26,7 +26,7 @@ public class CreateUserResource {
     }
 
     @POST
-    public CreateUserResponse createUser(@Valid CreateUpdateUserRequest request) {
+    public CreateUserResponse createUser(@Valid CreateUserRequest request) {
         User createdUser = createUserService.createUser(request);
         CreateUserResponse response = new CreateUserResponse(createdUser.getUserId());
         log.info("action=createUser result=success userId={}", createdUser.getUserId());

@@ -1,4 +1,4 @@
-package com.agilemonkeys.crm.services;
+package com.agilemonkeys.crm.services.user;
 
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiDuplicatedException;

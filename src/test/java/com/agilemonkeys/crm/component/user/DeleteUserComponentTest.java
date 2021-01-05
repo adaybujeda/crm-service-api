@@ -1,7 +1,7 @@
 package com.agilemonkeys.crm.component.user;
 
 import com.agilemonkeys.crm.RunningServiceBaseTest;
-import com.agilemonkeys.crm.resources.DeleteUserResource;
+import com.agilemonkeys.crm.resources.user.DeleteUserResource;
 import com.agilemonkeys.crm.resources.auth.LoginResponse;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;

@@ -1,11 +1,11 @@
-package com.agilemonkeys.crm.services;
+package com.agilemonkeys.crm.services.user;
 
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
 import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiNotFoundException;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiStaleStateException;
-import com.agilemonkeys.crm.resources.UpdateUserRequest;
+import com.agilemonkeys.crm.resources.user.UpdateUserRequest;
 import com.agilemonkeys.crm.storage.UsersDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

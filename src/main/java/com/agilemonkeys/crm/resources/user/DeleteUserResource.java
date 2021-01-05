@@ -1,7 +1,7 @@
-package com.agilemonkeys.crm.resources;
+package com.agilemonkeys.crm.resources.user;
 
 import com.agilemonkeys.crm.domain.UserRole;
-import com.agilemonkeys.crm.services.DeleteUserService;
+import com.agilemonkeys.crm.services.user.DeleteUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

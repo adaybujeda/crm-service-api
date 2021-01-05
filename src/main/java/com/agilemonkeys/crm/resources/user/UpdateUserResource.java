@@ -1,8 +1,8 @@
-package com.agilemonkeys.crm.resources;
+package com.agilemonkeys.crm.resources.user;
 
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserRole;
-import com.agilemonkeys.crm.services.UpdateUserService;
+import com.agilemonkeys.crm.services.user.UpdateUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,5 +1,6 @@
 package com.agilemonkeys.crm;
 
+import com.agilemonkeys.crm.util.WithAuth;
 import io.dropwizard.testing.ConfigOverride;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.BeforeClass;

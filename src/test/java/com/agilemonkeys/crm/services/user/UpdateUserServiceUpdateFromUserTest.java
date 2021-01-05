@@ -1,9 +1,11 @@
-package com.agilemonkeys.crm.services;
+package com.agilemonkeys.crm.services.user;
 
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiDuplicatedException;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiStaleStateException;
+import com.agilemonkeys.crm.services.user.DuplicatedUserService;
+import com.agilemonkeys.crm.services.user.UpdateUserService;
 import com.agilemonkeys.crm.storage.UsersDao;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;

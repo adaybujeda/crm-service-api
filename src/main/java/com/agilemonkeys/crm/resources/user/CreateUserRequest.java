@@ -1,4 +1,4 @@
-package com.agilemonkeys.crm.resources;
+package com.agilemonkeys.crm.resources.user;
 
 import com.agilemonkeys.crm.domain.UserRole;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -8,21 +8,25 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class UpdateUserRequest {
+public class CreateUserRequest {
 
     @NotEmpty
     @Size(min = 1, max = 100)
-    private String name;
+    private final String name;
     @NotEmpty
     @Size(min = 1, max = 100)
-    private String username;
+    private final String username;
+    @NotEmpty
+    @Size(min = 6, max = 40)
+    private final String password;
     @NotNull
-    private UserRole role;
+    private final UserRole role;
 
     @JsonCreator
-    public UpdateUserRequest(@JsonProperty("name") String name, @JsonProperty("username") String username, @JsonProperty("role") UserRole role) {
+    public CreateUserRequest(@JsonProperty("name") String name, @JsonProperty("username") String username, @JsonProperty("password") String password, @JsonProperty("role") UserRole role) {
         this.name = name;
         this.username = username;
+        this.password = password;
         this.role = role;
     }
 
@@ -32,6 +36,10 @@ public class UpdateUserRequest {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public UserRole getRole() {

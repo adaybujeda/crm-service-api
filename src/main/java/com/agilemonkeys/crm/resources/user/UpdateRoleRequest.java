@@ -1,4 +1,4 @@
-package com.agilemonkeys.crm.resources;
+package com.agilemonkeys.crm.resources.user;
 
 import com.agilemonkeys.crm.domain.UserRole;
 import com.fasterxml.jackson.annotation.JsonCreator;

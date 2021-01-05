@@ -1,5 +1,6 @@
-package com.agilemonkeys.crm.services;
+package com.agilemonkeys.crm.services.user;
 
+import com.agilemonkeys.crm.services.user.DeleteUserService;
 import com.agilemonkeys.crm.storage.UsersDao;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;

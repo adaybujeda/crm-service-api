@@ -1,7 +1,7 @@
 package com.agilemonkeys.crm.domain;
 
-import com.agilemonkeys.crm.resources.CreateUserRequest;
-import com.agilemonkeys.crm.resources.UpdateUserRequest;
+import com.agilemonkeys.crm.resources.user.CreateUserRequest;
+import com.agilemonkeys.crm.resources.user.UpdateUserRequest;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -4,7 +4,7 @@ import com.agilemonkeys.crm.domain.CrmAuthToken;
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiAuthException;
 import com.agilemonkeys.crm.resources.auth.LoginRequest;
-import com.agilemonkeys.crm.services.GetUsersService;
+import com.agilemonkeys.crm.services.user.GetUsersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

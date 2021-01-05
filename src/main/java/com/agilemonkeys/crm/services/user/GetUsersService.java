@@ -1,4 +1,4 @@
-package com.agilemonkeys.crm.services;
+package com.agilemonkeys.crm.services.user;
 
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiNotFoundException;
@@ -30,7 +30,12 @@ public class GetUsersService {
     }
 
     public Optional<User> getUserByUsername(String username) {
-        Optional<User> user = usersDao.getUserByUsername(username);
+        if(username == null || username.isEmpty()) {
+            return Optional.empty();
+        }
+
+        String normalizedUsername = username.trim().toLowerCase();
+        Optional<User> user = usersDao.getUserByUsername(normalizedUsername);
         log.info("action=getUserByUsername result=success username={} user={}", username, user.orElse(null));
         return user;
     }

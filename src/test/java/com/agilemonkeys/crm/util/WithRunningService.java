@@ -1,4 +1,4 @@
-package com.agilemonkeys.crm;
+package com.agilemonkeys.crm.util;
 
 import com.agilemonkeys.crm.RunningServiceBaseTest;
 

@@ -1,10 +1,12 @@
-package com.agilemonkeys.crm.services;
+package com.agilemonkeys.crm.services.user;
 
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiDuplicatedException;
-import com.agilemonkeys.crm.resources.CreateUserRequest;
+import com.agilemonkeys.crm.resources.user.CreateUserRequest;
 import com.agilemonkeys.crm.services.auth.CrmPasswordHashService;
+import com.agilemonkeys.crm.services.user.CreateUserService;
+import com.agilemonkeys.crm.services.user.DuplicatedUserService;
 import com.agilemonkeys.crm.storage.UsersDao;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;

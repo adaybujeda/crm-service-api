@@ -1,4 +1,4 @@
-package com.agilemonkeys.crm;
+package com.agilemonkeys.crm.util;
 
 import com.agilemonkeys.crm.resources.auth.LoginRequest;
 import com.agilemonkeys.crm.resources.auth.LoginResource;
@@ -17,7 +17,11 @@ public interface WithAuth extends WithRunningService {
     public static final String ADMIN_PASSWORD = "changeme";
 
     public default LoginResponse adminLogin() {
-        LoginRequest request = new LoginRequest(ADMIN_USERNAME, ADMIN_PASSWORD);
+        return login(ADMIN_USERNAME, ADMIN_PASSWORD);
+    }
+
+    public default LoginResponse login(String username, String password) {
+        LoginRequest request = new LoginRequest(username, password);
         String loginUrl = getRunningService().getResourceUrl(LoginResource.PATH);
         Response httpResponse = getRunningService().getClient().target(loginUrl).request().post(Entity.json(request));
 

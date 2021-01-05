@@ -1,4 +1,4 @@
-package com.agilemonkeys.crm.services;
+package com.agilemonkeys.crm.services.user;
 
 import com.agilemonkeys.crm.storage.UsersDao;
 import org.slf4j.Logger;

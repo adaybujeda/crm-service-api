@@ -1,7 +1,7 @@
 package com.agilemonkeys.crm.component.auth;
 
 import com.agilemonkeys.crm.RunningServiceBaseTest;
-import com.agilemonkeys.crm.WithAuth;
+import com.agilemonkeys.crm.util.WithAuth;
 import com.agilemonkeys.crm.resources.auth.ResetPasswordRequest;
 import com.agilemonkeys.crm.resources.auth.ResetPasswordResource;
 import org.hamcrest.MatcherAssert;

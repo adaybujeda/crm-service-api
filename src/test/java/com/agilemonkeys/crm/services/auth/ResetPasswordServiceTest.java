@@ -2,8 +2,8 @@ package com.agilemonkeys.crm.services.auth;
 
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
-import com.agilemonkeys.crm.services.GetUsersService;
-import com.agilemonkeys.crm.services.UpdateUserService;
+import com.agilemonkeys.crm.services.user.GetUsersService;
+import com.agilemonkeys.crm.services.user.UpdateUserService;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;

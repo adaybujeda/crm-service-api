@@ -1,11 +1,11 @@
 package com.agilemonkeys.crm.component.user;
 
 import com.agilemonkeys.crm.RunningServiceBaseTest;
-import com.agilemonkeys.crm.WithVersionedUser;
+import com.agilemonkeys.crm.util.WithVersionedUser;
 import com.agilemonkeys.crm.domain.UserRole;
-import com.agilemonkeys.crm.resources.UpdateRoleRequest;
-import com.agilemonkeys.crm.resources.UpdateUserRequest;
-import com.agilemonkeys.crm.resources.UpdateUserResource;
+import com.agilemonkeys.crm.resources.user.UpdateRoleRequest;
+import com.agilemonkeys.crm.resources.user.UpdateUserRequest;
+import com.agilemonkeys.crm.resources.user.UpdateUserResource;
 import com.agilemonkeys.crm.resources.auth.LoginResponse;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;

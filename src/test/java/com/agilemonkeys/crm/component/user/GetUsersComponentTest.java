@@ -1,9 +1,9 @@
 package com.agilemonkeys.crm.component.user;
 
 import com.agilemonkeys.crm.RunningServiceBaseTest;
-import com.agilemonkeys.crm.resources.GetUsersResource;
-import com.agilemonkeys.crm.resources.UserResponse;
-import com.agilemonkeys.crm.resources.UserResponse.UserResponseCollection;
+import com.agilemonkeys.crm.resources.user.GetUsersResource;
+import com.agilemonkeys.crm.resources.user.UserResponse;
+import com.agilemonkeys.crm.resources.user.UserResponse.UserResponseCollection;
 import com.agilemonkeys.crm.resources.auth.LoginResponse;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;

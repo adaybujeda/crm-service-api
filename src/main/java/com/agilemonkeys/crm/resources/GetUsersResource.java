@@ -16,11 +16,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Path("/crm/users")
+@Path(GetUsersResource.PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RolesAllowed(UserRole.ADMIN_STRING)
 public class GetUsersResource {
+
+    public static final String PATH = "/crm/users";
 
     private static final Logger log = LoggerFactory.getLogger(GetUsersResource.class);
 

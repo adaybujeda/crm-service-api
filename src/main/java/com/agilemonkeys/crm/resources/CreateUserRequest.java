@@ -12,15 +12,15 @@ public class CreateUserRequest {
 
     @NotEmpty
     @Size(min = 1, max = 100)
-    private String name;
+    private final String name;
     @NotEmpty
     @Size(min = 1, max = 100)
-    private String username;
+    private final String username;
     @NotEmpty
     @Size(min = 6, max = 40)
-    private String password;
+    private final String password;
     @NotNull
-    private UserRole role;
+    private final UserRole role;
 
     @JsonCreator
     public CreateUserRequest(@JsonProperty("name") String name, @JsonProperty("username") String username, @JsonProperty("password") String password, @JsonProperty("role") UserRole role) {

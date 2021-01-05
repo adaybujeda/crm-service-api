@@ -7,9 +7,9 @@ import javax.validation.constraints.NotEmpty;
 
 public class LoginRequest {
     @NotEmpty
-    private String username;
+    private final String username;
     @NotEmpty
-    private String password;
+    private final String password;
 
     @JsonCreator
     public LoginRequest(@JsonProperty("username")  String username, @JsonProperty("password")  String password) {

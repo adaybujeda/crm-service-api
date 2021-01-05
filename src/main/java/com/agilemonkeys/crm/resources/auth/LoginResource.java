@@ -12,10 +12,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-@Path("/auth/login")
+@Path(LoginResource.PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class LoginResource {
+
+    public static final String PATH = "/auth/login";
 
     private static final Logger log = LoggerFactory.getLogger(LoginResource.class);
 
@@ -28,7 +30,7 @@ public class LoginResource {
     @POST
     public LoginResponse login(@Valid LoginRequest request) {
         CrmAuthToken authToken = loginService.login(request);
-        LoginResponse response = new LoginResponse(authToken.getEncodedJwtToken(), authToken.getTokenTTLInSeconds());
+        LoginResponse response = new LoginResponse(authToken.getUserId(), authToken.getEncodedJwtToken(), authToken.getTokenTTLInSeconds());
         log.info("action=login result=success authToken={}", authToken);
         return response;
     }

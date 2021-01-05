@@ -23,7 +23,8 @@ The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 ## API specification
 **User management**
 [Users API specification](docs/crm-service-users-api.raml)  
-To secure the requests, the x-auth-header is used with a token. The token will be requested by the client via a WS still to be defined.
+[Auth API specification](docs/crm-service-auth-api.raml)  
+To secure the requests, the standard `Authorization: Bearer` is used with a token. The token will be requested by the client via a WS still to be defined.
 
 To prevent concurrent modifications, the ETag header is used on GET responses. The ETag header will contain the entity version number.
 Update requests will send an If-Match header with the version number to ensure no other update has been completed since last read.
@@ -99,3 +100,5 @@ This message is not consistent with the other error messages. We should create a
 **SSL:**
 Should we use SSL for the final hop to access this service?
 I am assuming that SSL will be provided at the outer layers of the system, but will it be needed inside the data center?
+
+**[Phase 2 considerations](docs/phase2.md)**

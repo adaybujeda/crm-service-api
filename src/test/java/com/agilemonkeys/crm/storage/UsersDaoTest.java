@@ -1,12 +1,9 @@
 package com.agilemonkeys.crm.storage;
 
-import com.agilemonkeys.crm.CrmServiceApiApplication;
-import com.agilemonkeys.crm.config.CrmServiceApiConfiguration;
+import com.agilemonkeys.crm.RunningServiceBaseTest;
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
 import com.agilemonkeys.crm.domain.UserRole;
-import io.dropwizard.testing.ConfigOverride;
-import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -14,7 +11,6 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.junit.BeforeClass;
-import org.junit.ClassRule;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -22,19 +18,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UsersDaoTest {
-
-    @ClassRule
-    public static final DropwizardAppRule<CrmServiceApiConfiguration> RULE =
-            new DropwizardAppRule<>(CrmServiceApiApplication.class, "/config.yml",
-                    ConfigOverride.config("server.applicationConnectors[0].port", "0"),
-                    ConfigOverride.config("server.adminConnectors[0].port", "0"));
+public class UsersDaoTest extends RunningServiceBaseTest {
 
     private static UsersDao underTest;
 
     @BeforeClass
     public static void beforeTest() throws Exception {
-        RULE.getApplication().run("db", "migrate", "/config.yml");
         Jdbi jdbi = Jdbi.create("jdbc:h2:mem:test", "sa", "sa");
         jdbi.installPlugin(new SqlObjectPlugin());
         jdbi.registerRowMapper(ConstructorMapper.factory(User.class));

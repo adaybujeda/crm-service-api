@@ -3,6 +3,7 @@ package com.agilemonkeys.crm;
 import com.agilemonkeys.crm.config.CrmServiceApiConfiguration;
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserRole;
+import com.agilemonkeys.crm.exceptions.CrmServiceApiDuplicatedException;
 import com.agilemonkeys.crm.resources.CreateUserRequest;
 import com.agilemonkeys.crm.services.CreateUserService;
 import com.agilemonkeys.crm.services.DuplicatedUserService;
@@ -34,9 +35,14 @@ public class CreateAdminUserCommand extends ConfiguredCommand<CrmServiceApiConfi
         CreateUserService createUserService = new CreateUserService(storageContext.getUsersDao(), duplicatedUserService, passwordHashService);
 
         String password = namespace.get("password");
-        CreateUserRequest request = new CreateUserRequest("Admin User", "admin", password, UserRole.ADMIN);
-        User adminUser = createUserService.createUser(request);
-        log.info("action=create-admin-user completed adminUser={}", adminUser);
+        CreateUserRequest request = new CreateUserRequest("Admin User", "admin", password.trim(), UserRole.ADMIN);
+        try {
+            User adminUser = createUserService.createUser(request);
+            log.info("action=create-admin-user completed adminUser={}", adminUser);
+        } catch (CrmServiceApiDuplicatedException e) {
+            log.info("action=create-admin-user result=admin-user-already-created message={}", e.getMessage());
+        }
+
     }
 
 

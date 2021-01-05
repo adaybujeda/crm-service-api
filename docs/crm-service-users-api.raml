@@ -47,6 +47,9 @@ traits:
                     }
         responses:
             200:
+                headers:
+                    ETag:
+                       description: The user version number for optimistic locking on update
                 body:
                     application/json:
                         example: |

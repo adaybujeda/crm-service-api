@@ -11,11 +11,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.UUID;
 
-@Path("/crm/users")
+@Path(DeleteUserResource.PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RolesAllowed(UserRole.ADMIN_STRING)
 public class DeleteUserResource {
+
+    public static final String PATH = "/crm/users";
 
     private static final Logger log = LoggerFactory.getLogger(DeleteUserResource.class);
 

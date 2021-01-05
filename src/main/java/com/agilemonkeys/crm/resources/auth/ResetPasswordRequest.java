@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 public class ResetPasswordRequest {
     @NotEmpty
     @Size(min = 6, max = 40)
-    private String newPassword;
+    private final String newPassword;
 
     @JsonCreator
     public ResetPasswordRequest(@JsonProperty("newPassword")  String newPassword) {

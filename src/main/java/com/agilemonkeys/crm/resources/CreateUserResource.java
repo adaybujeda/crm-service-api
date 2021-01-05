@@ -12,13 +12,17 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-@Path("/crm/users")
+@Path(CreateUserResource.PATH)
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RolesAllowed(UserRole.ADMIN_STRING)
 public class CreateUserResource {
+
+    public static final String PATH = "/crm/users";
 
     private static final Logger log = LoggerFactory.getLogger(CreateUserResource.class);
 
@@ -29,10 +33,10 @@ public class CreateUserResource {
     }
 
     @POST
-    public CreateUserResponse createUser(@Valid CreateUserRequest request) {
+    public Response createUser(@Valid CreateUserRequest request) {
         User createdUser = createUserService.createUser(request);
         CreateUserResponse response = new CreateUserResponse(createdUser.getUserId());
         log.info("action=createUser result=success userId={}", createdUser.getUserId());
-        return response;
+        return Response.ok(response).header(HttpHeaders.ETAG, createdUser.getVersion()).build();
     }
 }

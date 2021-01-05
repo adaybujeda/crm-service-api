@@ -4,7 +4,8 @@ RESTfull API to manage users and customers. Basic CRUD operations to manage User
 ### Local environment
 The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 
-### Run the service locally - With local DB under `/tmp/crm-service-db`
+### Running the service locally
+**With local DB under `/tmp/crm-service-db`**
 * Build the service:
 * `mvn clean install`
 * Delete the database to start fresh:
@@ -21,14 +22,16 @@ The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 * [Postman collection](docs/crm-service-api.postman.json)
 
 ## API specification
-**User management**
+**User management**  
 [Users API specification](docs/crm-service-users-api.raml)  
-[Auth API specification](docs/crm-service-auth-api.raml)  
 To secure the requests, the standard `Authorization: Bearer` is used with a token. The token will be requested by the client via a WS still to be defined.
 
 To prevent concurrent modifications, the ETag header is used on GET responses. The ETag header will contain the entity version number.
 Update requests will send an If-Match header with the version number to ensure no other update has been completed since last read.
 The service will return a 412 response if the version numbers do not match.
+
+**Auth**  
+[Auth API specification](docs/crm-service-auth-api.raml)
 
 ## API Storage
 As the services and data entities are very simple, we could have selected almost any type of storage.  

@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 
 @Path(CreateUserResource.PATH)
 @Produces(MediaType.APPLICATION_JSON)
@@ -37,6 +38,7 @@ public class CreateUserResource {
         User createdUser = createUserService.createUser(request);
         CreateUserResponse response = new CreateUserResponse(createdUser.getUserId());
         log.info("action=createUser result=success userId={}", createdUser.getUserId());
-        return Response.ok(response).header(HttpHeaders.ETAG, createdUser.getVersion()).build();
+        String getUserPath = GetUsersResource.createResourcePath(createdUser.getUserId());
+        return Response.created(URI.create(getUserPath)).header(HttpHeaders.ETAG, createdUser.getVersion()).entity(response).build();
     }
 }

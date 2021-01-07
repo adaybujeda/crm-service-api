@@ -14,7 +14,7 @@ public interface WithUser extends WithAuth{
     }
 
     public default Response getUserResponse(LoginResponse loginResponse, UUID userId) {
-        String path = String.format("%s/%s", GetUsersResource.PATH, userId);
+        String path = GetUsersResource.createResourcePath(userId);
         Response httpResponse = authorizedRequest(loginResponse, path).get();
 
         return httpResponse;

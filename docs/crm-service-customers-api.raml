@@ -15,8 +15,8 @@ traits:
       Authorization:
         required: true
 
-/crm/users:
-    description: Collection resource for the User entity
+/crm/customers:
+    description: Collection resource for the Customer entity
     is: [authorized, unauthorized-error]
     get:
         responses:
@@ -27,10 +27,13 @@ traits:
                             {
                             "items": [
                                 {
-                                    "userId": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
-                                    "name": "John Smith",
-                                    "username": "jsmith",
-                                    "role": "admin"
+                                    "customerId": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
+                                    "id": "provided-id",
+                                    "name": "John",
+                                    "surname": "Smith",
+                                    "photoUrl": "http://localhost:8080/crm/customers/fd383951-ff29-4eb2-ad64-9d1b22270d7e/image",
+                                    "createdBy": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
+                                    "updatedBy": "fd383951-ff29-4eb2-ad64-9d1b22270d7e"
                                 },
                                 {...}
                             ]}
@@ -40,10 +43,9 @@ traits:
             application/json:
                  example: |
                     {
-                        "name": "John Smith",
-                        "username": "jsmith",
-                        "password": "some-password",
-                        "role": "admin"
+                        "id": "providedId",
+                        "name": "John",
+                        "surname": "Smith"
                     }
         responses:
             201:
@@ -51,15 +53,15 @@ traits:
                     ETag:
                        description: The user version number for optimistic locking on update
                     Location:
-                       description: The URL tp get the user
+                       description: The URL tp get the customer
                 body:
                     application/json:
                         example: |
                             {
-                                "userId": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
+                                "customerId": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
                             }
-    /{userId}:
-        description: Resource for individual User operations
+    /{customerId}:
+        description: Resource for individual Customer operations
         is: [authorized, unauthorized-error, invalid-request-error, not-found-error]
         get:
             responses:
@@ -68,36 +70,30 @@ traits:
                         ETag:
                             description: The user version number for optimistic locking on update
                     body:
-                        example: |
-                            {
-                                "userId": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
-                                "name": "John Smith",
-                                "username": "jsmith",
-                                "role": "user"
-                            }
+                        application/json:
+                            example: |
+                                {
+                                    "customerId": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
+                                    "id": "provided-id",
+                                    "name": "John",
+                                    "surname": "Smith",
+                                    "photoUrl": "http://localhost:8080/crm/customers/fd383951-ff29-4eb2-ad64-9d1b22270d7e/image",
+                                    "createdBy": "fd383951-ff29-4eb2-ad64-9d1b22270d7e",
+                                    "updatedBy": "fd383951-ff29-4eb2-ad64-9d1b22270d7e"
+                                }
         put:
             is: [stale-entity-error, duplicated-error]
             headers:
                 If-Match:
                     description: The user version number returned in the GET call.
             body:
-                example: |
-                    {
-                        "name": "John Smith",
-                        "username": "jsmith",
-                        "password": "some-password",
-                        "role": "admin"
-                    }
-            responses:
-                204:
-        patch:
-            description: To make a user and admin or to remove admin privileges to a user.
-            is: [stale-entity-error]
-            headers:
-                If-Match:
-                    description: The user version number returned in the GET call.
-            body:
-                example: {"role": "admin"}
+                application/json:
+                    example: |
+                        {
+                            "id": "providedId",
+                            "name": "John",
+                            "surname": "Smith"
+                        }
             responses:
                 204:
         delete:

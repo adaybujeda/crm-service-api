@@ -1,11 +1,11 @@
 package com.agilemonkeys.crm.component.user;
 
 import com.agilemonkeys.crm.RunningServiceBaseTest;
-import com.agilemonkeys.crm.util.WithAuth;
 import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.resources.user.CreateUserRequest;
 import com.agilemonkeys.crm.resources.user.CreateUserResource;
 import com.agilemonkeys.crm.resources.user.CreateUserResponse;
+import com.agilemonkeys.crm.util.WithAuth;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -51,10 +51,12 @@ public class CreateUserComponentTest extends RunningServiceBaseTest {
         CreateUserRequest request = createRandomValidRequest(Optional.empty());
         Response httpResponse = authorizedRequest(CreateUserResource.PATH).post(Entity.json(request));
 
-        MatcherAssert.assertThat(httpResponse.getStatus(), Matchers.is(200));
+        MatcherAssert.assertThat(httpResponse.getStatus(), Matchers.is(201));
         MatcherAssert.assertThat(httpResponse.getHeaderString(HttpHeaders.ETAG), Matchers.notNullValue());
-        CreateUserResponse response = httpResponse.readEntity(CreateUserResponse.class);
 
+        CreateUserResponse response = httpResponse.readEntity(CreateUserResponse.class);
+        MatcherAssert.assertThat(httpResponse.getHeaderString(HttpHeaders.LOCATION), Matchers.notNullValue());
+        MatcherAssert.assertThat(httpResponse.getHeaderString(HttpHeaders.LOCATION), Matchers.containsString(response.getUserId().toString()));
         MatcherAssert.assertThat(response.getUserId(), Matchers.notNullValue());
     }
 

@@ -1,0 +1,35 @@
+#%RAML 1.0
+title: CRM Service API
+baseUri: http://localhost:8080
+version: 1.0
+mediaType: application/json
+traits:
+  unauthorized-error: !include unauthorized-error.raml
+  invalid-request-error: !include invalid-error.raml
+  not-found-error: !include not-found-error.raml
+  authorized:
+    description: Request authorization mechanism
+    headers:
+      Authorization:
+        required: true
+
+/crm/customers/{customerId}/photo:
+    description: Get Customer photo
+    is: [authorized, unauthorized-error, not-found-error]
+    get:
+        responses:
+            200:
+                body:
+                    image/png
+                    image/jpeg
+    post:
+        is: [invalid-request-error]
+        body:
+            image/png:
+            image/jpeg:
+                description: The customer's photo
+        responses:
+            201:
+                headers:
+                    Location:
+                       description: The URL tp get the customer image

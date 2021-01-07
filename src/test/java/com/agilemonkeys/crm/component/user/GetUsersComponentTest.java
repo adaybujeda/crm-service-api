@@ -1,10 +1,10 @@
 package com.agilemonkeys.crm.component.user;
 
 import com.agilemonkeys.crm.RunningServiceBaseTest;
+import com.agilemonkeys.crm.resources.auth.LoginResponse;
 import com.agilemonkeys.crm.resources.user.GetUsersResource;
 import com.agilemonkeys.crm.resources.user.UserResponse;
 import com.agilemonkeys.crm.resources.user.UserResponse.UserResponseCollection;
-import com.agilemonkeys.crm.resources.auth.LoginResponse;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class GetUsersComponentTest extends RunningServiceBaseTest {
     @Test
     public void getUser_should_return_401_when_not_authorized() {
         UUID userId = UUID.randomUUID();
-        String url = getResourceUrl(String.format("%s/%s", GetUsersResource.PATH, userId));
+        String url = getResourceUrl(GetUsersResource.createResourcePath(userId));
         Response httpResponse = getClient().target(url).request().get();
 
         MatcherAssert.assertThat(httpResponse.getStatus(), Matchers.is(401));
@@ -46,7 +46,7 @@ public class GetUsersComponentTest extends RunningServiceBaseTest {
     @Test
     public void getUser_should_return_404_when_user_not_found() {
         UUID userId = UUID.randomUUID();
-        String path = String.format("%s/%s", GetUsersResource.PATH, userId);
+        String path = GetUsersResource.createResourcePath(userId);
         Response httpResponse = authorizedRequest(path).get();
 
         MatcherAssert.assertThat(httpResponse.getStatus(), Matchers.is(404));
@@ -56,7 +56,7 @@ public class GetUsersComponentTest extends RunningServiceBaseTest {
     @Test
     public void getUser_should_return_a_user_when_successful() {
         LoginResponse loginResponse = adminLogin();
-        String path = String.format("%s/%s", GetUsersResource.PATH, loginResponse.getUserId());
+        String path = GetUsersResource.createResourcePath(loginResponse.getUserId());
         Response httpResponse = authorizedRequest(loginResponse, path).get();
 
         MatcherAssert.assertThat(httpResponse.getStatus(), Matchers.is(200));

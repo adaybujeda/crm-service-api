@@ -22,16 +22,24 @@ The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 * [Postman collection](docs/crm-service-api.postman.json)
 
 ## API specification
-**User management**  
-[Users API specification](docs/crm-service-users-api.raml)  
-To secure the requests, the standard `Authorization: Bearer` is used with a token. The token will be requested by the client via a WS still to be defined.
-
-To prevent concurrent modifications, the ETag header is used on GET responses. The ETag header will contain the entity version number.
-Update requests will send an If-Match header with the version number to ensure no other update has been completed since last read.
-The service will return a 412 response if the version numbers do not match.
-
 **Auth**  
 [Auth API specification](docs/crm-service-auth-api.raml)
+
+**User management**  
+[Users API specification](docs/crm-service-users-api.raml)
+
+**Customers**  
+[Customers API specification](docs/crm-service-customers-api.raml)  
+[Ciustomer's image API specification](docs/crm-service-customers-image-api.raml)
+
+To secure the requests, the standard `Authorization: Bearer` mechanism is used. The token will be requested by the client via the login WS.
+
+To prevent concurrent modifications an entity version number will be used. Get entity responses will include the `ETag` header, it will contain the entity version number.
+Update requests will send an `If-Match` header with the version number to ensure no other update has been completed since last read.
+The service will return a `412` response if the version numbers do not match.
+
+**CORS**
+This service was designed as a back-end to back-end api. If there are use cases where a front-end app (from a browser) will be using the API, we need to implement a filter to return the appropriate CORS headers.
 
 ## API Storage
 As the services and data entities are very simple, we could have selected almost any type of storage.  
@@ -52,6 +60,7 @@ Other considerations when selecting storage:
 This might have been a bit too much for this project, but I wanted to show that automating DB changes are an important part of the dev lifecycle.
 
 The idea is to execute the migrations on every deployment to keep the DB and code in sync.
+The SQL files with the database tables can be found here: [Database table definitions](src/main/resources/migrations)
 
 ## Credentials Management
 As per requirements, the system should manage Users and provide an authentication mechanism.

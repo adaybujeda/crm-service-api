@@ -47,4 +47,8 @@ public class GetUsersResource {
         log.info("action=getUser result=success userId={}", userId);
         return Response.ok(response).header(HttpHeaders.ETAG, user.getVersion()).build();
     }
+
+    public static String createResourcePath(UUID userId) {
+        return String.format("%s/%s", PATH, userId);
+    }
 }

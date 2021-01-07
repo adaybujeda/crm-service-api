@@ -67,7 +67,8 @@ But using these services is not always possible or effective, it is expensive in
 Sometimes, for small projects/teams, this is not efficient.
 
 In our case, to keep the project simple, I have chosen the database storage to reuse the database we are already using. I have chosen the database over file storage to make the system a bit more portable.  
-I will be following some recommendations I found while doing research: store the photos in their own table using a VARBINARY field. As well, limiting the photo size to around 1MB.
+
+I will be following some recommendations I found while doing the analysis: store the photos in their own table and using a `VARBINARY` field. As well, limiting the photo size to around `1MB`.
 
 ### Database change management - Dropwizard Migrations - Liquibase
 This might have been a bit too much for this project, but I wanted to show that automating DB changes are an important part of the dev lifecycle.

@@ -30,7 +30,7 @@ The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 
 **Customers**  
 [Customers API specification](docs/crm-service-customers-api.raml)  
-[Ciustomer's image API specification](docs/crm-service-customers-image-api.raml)
+[Ciustomer's photo API specification](docs/crm-service-customers-photo-api.raml)
 
 To secure the requests, the standard `Authorization: Bearer` mechanism is used. The token will be requested by the client via the login WS.
 

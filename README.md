@@ -23,14 +23,14 @@ The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 
 ## API specification
 **Auth**  
-[Auth API specification](docs/crm-service-auth-api.raml)
+[Auth API specification](docs/api-spec/crm-service-auth-api.raml)
 
 **User management**  
-[Users API specification](docs/crm-service-users-api.raml)
+[Users API specification](docs/api-spec/crm-service-users-api.raml)
 
 **Customers**  
-[Customers API specification](docs/crm-service-customers-api.raml)  
-[Ciustomer's photo API specification](docs/crm-service-customers-photo-api.raml)
+[Customers API specification](docs/api-spec/crm-service-customers-api.raml)  
+[Ciustomer's photo API specification](docs/api-spec/crm-service-customers-photo-api.raml)
 
 To secure the requests, the standard `Authorization: Bearer` mechanism is used. The token will be requested by the client via the login WS.
 
@@ -55,6 +55,19 @@ Other considerations when selecting storage:
 * Has the company invested in a certain storage technology/cluster.
 * What is the expertise in the team/company for certain types, engines and libraries.
 * Is there a need to explore new technologies? If this is a small, low-key project, we could use it to learn new things.
+
+### Photo storage
+To store the photos in the system, I have considered several options:
+* **Database storage**
+* **Filesystem storage**
+* **Third-party service (eg: Amazon S3)**
+
+My preferred option for storing images would have been to use a cloud service. This provides highly available, highly resilient storage, with the possibility of serving these files directly from the third party infrastructure.  
+But using these services is not always possible or effective, it is expensive in the long term, external dependency to manage, the photos are stored off premise, we need to establish a commercial relationship with the third party and do due diligence.
+Sometimes, for small projects/teams, this is not efficient.
+
+In our case, to keep the project simple, I have chosen the database storage to reuse the database we are already using. I have chosen the database over file storage to make the system a bit more portable.  
+I will be following some recommendations I found while doing research: store the photos in their own table using a VARBINARY field. As well, limiting the photo size to around 1MB.
 
 ### Database change management - Dropwizard Migrations - Liquibase
 This might have been a bit too much for this project, but I wanted to show that automating DB changes are an important part of the dev lifecycle.

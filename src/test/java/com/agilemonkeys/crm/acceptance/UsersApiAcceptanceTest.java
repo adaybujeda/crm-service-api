@@ -1,11 +1,11 @@
 package com.agilemonkeys.crm.acceptance;
 
 import com.agilemonkeys.crm.RunningServiceBaseTest;
-import com.agilemonkeys.crm.util.WithAuth;
-import com.agilemonkeys.crm.util.WithVersionedUser;
 import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.resources.auth.LoginResponse;
 import com.agilemonkeys.crm.resources.user.*;
+import com.agilemonkeys.crm.util.WithAuth;
+import com.agilemonkeys.crm.util.WithVersionedUser;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -17,9 +17,9 @@ import java.util.UUID;
 
 public class UsersApiAcceptanceTest extends RunningServiceBaseTest implements WithVersionedUser {
 
-    private static final String NEW_ADMIN_USERNAME = "newAdmin";
+    private static final String NEW_ADMIN_USERNAME = UUID.randomUUID().toString();
     private static final String NEW_ADMIN_PASSWORD = "P4ssword!";
-    private static final String USER_USERNAME = "newUser";
+    private static final String USER_USERNAME = UUID.randomUUID().toString();
     private static final String USER_PASSWORD = "P4ssword!";
 
     @Test
@@ -39,14 +39,15 @@ public class UsersApiAcceptanceTest extends RunningServiceBaseTest implements Wi
         LoginResponse userAuthInfo = login(newUsernameForUser, USER_PASSWORD);
         MatcherAssert.assertThat(userAuthInfo.getUserId(), Matchers.is(regularUser));
         //DELETE USER
-        String deleteUserPath = String.format("%s/%s", DeleteUserResource.PATH, userAuthInfo.getUserId());
+        String deleteUserPath = DeleteUserResource.createResourcePath(userAuthInfo.getUserId());
         Response deleteUserResponse = authorizedRequest(adminAuthInfo, deleteUserPath).delete();
         MatcherAssert.assertThat(deleteUserResponse.getStatus(), Matchers.is(204));
+        deleteUserResponse.close();
 
         //VERIFY USER IS GONE
         Response getUserResponse = getUserResponse(adminAuthInfo, userAuthInfo.getUserId());
-        getUserResponse.close();
         MatcherAssert.assertThat(getUserResponse.getStatus(), Matchers.is(404));
+        getUserResponse.close();
     }
 
     private UUID createUser(LoginResponse authInfo, String username, String password, UserRole role) {

@@ -18,9 +18,9 @@ public interface WithVersionedCustomer extends WithCustomer {
         return requestBuilder;
     }
 
-    public default VersionedCustomer getVersionedCustomer(UUID userId) {
+    public default VersionedCustomer getVersionedCustomer(UUID customerId) {
         LoginResponse loginResponse = adminLogin();
-        return getVersionedCustomer(loginResponse, userId);
+        return getVersionedCustomer(loginResponse, customerId);
     }
 
     public default VersionedCustomer getVersionedCustomer(LoginResponse loginResponse, UUID customerId) {

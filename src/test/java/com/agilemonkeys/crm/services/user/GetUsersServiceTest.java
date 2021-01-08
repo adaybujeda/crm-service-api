@@ -69,7 +69,7 @@ public class GetUsersServiceTest {
     }
 
     @Test
-    public void getUsers_should_return_all_users_from_database() {
+    public void getAllUsers_should_return_all_users_from_database() {
         List<User> dbUsers = Arrays.asList(Mockito.mock(User.class), Mockito.mock(User.class));
         Mockito.when(usersDao.getUsers()).thenReturn(dbUsers);
 

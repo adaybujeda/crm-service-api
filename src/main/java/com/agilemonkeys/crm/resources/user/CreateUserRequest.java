@@ -11,10 +11,10 @@ import javax.validation.constraints.Size;
 public class CreateUserRequest {
 
     @NotEmpty
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 50)
     private final String name;
     @NotEmpty
-    @Size(min = 1, max = 100)
+    @Size(min = 1, max = 50)
     private final String username;
     @NotEmpty
     @Size(min = 6, max = 40)

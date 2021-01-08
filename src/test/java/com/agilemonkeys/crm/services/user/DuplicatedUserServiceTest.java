@@ -3,7 +3,6 @@ package com.agilemonkeys.crm.services.user;
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiDuplicatedException;
-import com.agilemonkeys.crm.services.user.DuplicatedUserService;
 import com.agilemonkeys.crm.storage.UsersDao;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -56,6 +55,7 @@ public class DuplicatedUserServiceTest {
         Mockito.when(usersDao.getUserByUsername(USERNAME)).thenReturn(Optional.of(EXISTING_USER));
 
         underTest.checkUsername(USERNAME, Optional.of(USER_ID));
+        Mockito.verify(usersDao).getUserByUsername(USERNAME);
     }
 
 }

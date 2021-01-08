@@ -5,17 +5,21 @@ import com.agilemonkeys.crm.CrmStorageFactory.CrmStorageContext;
 import com.agilemonkeys.crm.config.CrmServiceApiConfiguration;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiExceptionMapper;
 import com.agilemonkeys.crm.exceptions.ValidationExceptionMapper;
+import com.agilemonkeys.crm.resources.CrmServiceLoggingFilter;
+import com.agilemonkeys.crm.resources.auth.LoginResource;
+import com.agilemonkeys.crm.resources.auth.ResetPasswordResource;
+import com.agilemonkeys.crm.resources.customer.*;
 import com.agilemonkeys.crm.resources.user.CreateUserResource;
 import com.agilemonkeys.crm.resources.user.DeleteUserResource;
 import com.agilemonkeys.crm.resources.user.GetUsersResource;
 import com.agilemonkeys.crm.resources.user.UpdateUserResource;
-import com.agilemonkeys.crm.resources.auth.LoginResource;
-import com.agilemonkeys.crm.resources.auth.ResetPasswordResource;
 import com.agilemonkeys.crm.services.auth.CrmPasswordHashService;
 import com.agilemonkeys.crm.services.auth.LoginService;
 import com.agilemonkeys.crm.services.auth.ResetPasswordService;
+import com.agilemonkeys.crm.services.customer.*;
 import com.agilemonkeys.crm.services.user.*;
 import com.agilemonkeys.crm.storage.UsersDao;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import io.dropwizard.Application;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.ResourceConfigurationSourceProvider;
@@ -49,6 +53,7 @@ public class CrmServiceApiApplication extends Application<CrmServiceApiConfigura
 
         bootstrap.addBundle(new CrmMigrationsBundle());
         bootstrap.addCommand(new CreateAdminUserCommand());
+        bootstrap.getObjectMapper().disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     @Override
@@ -73,13 +78,29 @@ public class CrmServiceApiApplication extends Application<CrmServiceApiConfigura
         LoginService loginService = new LoginService(getUsersService, authContext.getJwtTokenFactory(), passwordHashService);
         ResetPasswordService resetPasswordService = new ResetPasswordService(getUsersService, updateUserService, passwordHashService);
 
+        DuplicatedIdService duplicatedIdService = new DuplicatedIdService(storageContext.getCustomersDao());
+        CreateCustomerService createCustomerService = new CreateCustomerService(storageContext.getCustomersDao(), duplicatedIdService);
+        UpdateCustomerService updateCustomerService = new UpdateCustomerService(storageContext.getCustomersDao(), duplicatedIdService);
+        GetCustomersService getCustomersService = new GetCustomersService(storageContext.getCustomersDao());
+        DeleteCustomerService deleteCustomerService = new DeleteCustomerService(storageContext.getCustomersDao());
+        UploadPhotoService uploadPhotoService = new UploadPhotoService(storageContext.getCustomerPhotosDao());
+
         //RESOURCES
+        environment.jersey().register(new CrmServiceLoggingFilter());
+
         environment.jersey().register(new LoginResource(loginService));
         environment.jersey().register(new ResetPasswordResource(resetPasswordService));
         environment.jersey().register(new GetUsersResource(getUsersService));
         environment.jersey().register(new CreateUserResource(createUserService));
         environment.jersey().register(new UpdateUserResource(updateUserService));
         environment.jersey().register(new DeleteUserResource(deleteUserService));
+
+        environment.jersey().register(new CreateCustomerResource(createCustomerService));
+        environment.jersey().register(new UpdateCustomerResource(updateCustomerService));
+        environment.jersey().register(new GetCustomersResource(getCustomersService));
+        environment.jersey().register(new DeleteCustomerResource(deleteCustomerService));
+        environment.jersey().register(new UploadCustomerPhotoResource(uploadPhotoService));
+        environment.jersey().register(new GetCustomerPhotoResource(storageContext.getCustomerPhotosDao()));
     }
 
 }

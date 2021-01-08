@@ -28,3 +28,10 @@ dataSource:
   checkConnectionWhileIdle: false
   evictionInterval: 10s
   minIdleTime: 1 minute
+
+logging:
+  appenders:
+    - type: console
+      threshold: DEBUG
+      logFormat: "%-5p [%d{ISO8601,UTC}] [authUser=%X{userId}] [%thread] %logger{0}: %m%n%rEx"
+

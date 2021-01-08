@@ -10,7 +10,6 @@ import com.agilemonkeys.crm.storage.UsersDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,8 +50,8 @@ public class UpdateUserService {
         User oldUser = checkExistingUserState(UPDATE_ROLE, userId, requestVersion);
         User newUser = UserBuilder.fromUser(oldUser)
                 .withRole(newRole)
-                .withVersion(oldUser.getVersion() + 1)
-                .withUpdatedDate(LocalDateTime.now())
+                .withNextVersion()
+                .withUpdatedDate()
                 .build();
 
         return updateStorage(UPDATE_ROLE, newUser, requestVersion);

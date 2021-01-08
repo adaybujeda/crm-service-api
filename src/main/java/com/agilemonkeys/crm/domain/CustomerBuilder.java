@@ -67,6 +67,11 @@ public class CustomerBuilder {
         return this;
     }
 
+    public CustomerBuilder withNextVersion() {
+        this.version = version + 1;
+        return this;
+    }
+
     public CustomerBuilder withCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
         return this;
@@ -79,6 +84,11 @@ public class CustomerBuilder {
 
     public CustomerBuilder withUpdatedDate(LocalDateTime updatedDate) {
         this.updatedDate = updatedDate;
+        return this;
+    }
+
+    public CustomerBuilder withUpdatedDate() {
+        this.updatedDate = LocalDateTime.now();
         return this;
     }
 

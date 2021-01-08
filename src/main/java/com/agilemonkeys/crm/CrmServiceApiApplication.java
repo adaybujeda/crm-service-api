@@ -78,12 +78,14 @@ public class CrmServiceApiApplication extends Application<CrmServiceApiConfigura
         LoginService loginService = new LoginService(getUsersService, authContext.getJwtTokenFactory(), passwordHashService);
         ResetPasswordService resetPasswordService = new ResetPasswordService(getUsersService, updateUserService, passwordHashService);
 
+        CheckCustomerStateService checkCustomerStateService = new CheckCustomerStateService(storageContext.getCustomersDao());
         DuplicatedIdService duplicatedIdService = new DuplicatedIdService(storageContext.getCustomersDao());
         CreateCustomerService createCustomerService = new CreateCustomerService(storageContext.getCustomersDao(), duplicatedIdService);
-        UpdateCustomerService updateCustomerService = new UpdateCustomerService(storageContext.getCustomersDao(), duplicatedIdService);
+        UpdateCustomerService updateCustomerService = new UpdateCustomerService(storageContext.getCustomersDao(), checkCustomerStateService, duplicatedIdService);
         GetCustomersService getCustomersService = new GetCustomersService(storageContext.getCustomersDao());
         DeleteCustomerService deleteCustomerService = new DeleteCustomerService(storageContext.getCustomersDao());
-        UploadPhotoService uploadPhotoService = new UploadPhotoService(storageContext.getCustomerPhotosDao());
+        UploadPhotoService uploadPhotoService = new UploadPhotoService(storageContext.getCustomerPhotosDao(), checkCustomerStateService, updateCustomerService);
+        GetCustomerPhotoService getCustomerPhotoService = new GetCustomerPhotoService(storageContext.getCustomerPhotosDao());
 
         //RESOURCES
         environment.jersey().register(new CrmServiceLoggingFilter());
@@ -100,7 +102,7 @@ public class CrmServiceApiApplication extends Application<CrmServiceApiConfigura
         environment.jersey().register(new GetCustomersResource(getCustomersService));
         environment.jersey().register(new DeleteCustomerResource(deleteCustomerService));
         environment.jersey().register(new UploadCustomerPhotoResource(uploadPhotoService));
-        environment.jersey().register(new GetCustomerPhotoResource(storageContext.getCustomerPhotosDao()));
+        environment.jersey().register(new GetCustomerPhotoResource(getCustomerPhotoService));
     }
 
 }

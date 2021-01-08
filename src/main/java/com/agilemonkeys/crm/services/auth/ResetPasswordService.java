@@ -7,7 +7,6 @@ import com.agilemonkeys.crm.services.user.UpdateUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class ResetPasswordService {
@@ -30,8 +29,8 @@ public class ResetPasswordService {
 
         User userWithNewPassword = UserBuilder.fromUser(oldUser)
                 .withPasswordHash(passwordHash)
-                .withVersion(oldUser.getVersion() + 1)
-                .withUpdatedDate(LocalDateTime.now())
+                .withNextVersion()
+                .withUpdatedDate()
                 .build();
         User updatedUser = updateUserService.updateUser(oldUser.getVersion(), userWithNewPassword);
         log.info("action=resetPassword result=success userId={} updatedUser={}", updatedUser.getUserId(), updatedUser);

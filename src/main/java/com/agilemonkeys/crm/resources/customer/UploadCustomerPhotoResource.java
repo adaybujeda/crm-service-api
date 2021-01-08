@@ -1,8 +1,10 @@
 package com.agilemonkeys.crm.resources.customer;
 
+import com.agilemonkeys.crm.domain.AuthenticatedUser;
 import com.agilemonkeys.crm.domain.CustomerPhoto;
 import com.agilemonkeys.crm.services.customer.UploadPhotoService;
 import com.google.common.io.ByteStreams;
+import io.dropwizard.auth.Auth;
 import io.dropwizard.jersey.validation.ValidationErrorMessage;
 import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
@@ -40,7 +42,8 @@ public class UploadCustomerPhotoResource {
     }
 
     @POST
-    public Response uploadPhoto(@PathParam("customerId") @NotNull UUID customerId, @HeaderParam(HttpHeaders.CONTENT_TYPE) @NotNull String fileType, @HeaderParam(HttpHeaders.CONTENT_LENGTH) Long fileSize, InputStream fileStream) throws IOException {
+    public Response uploadPhoto(@PathParam("customerId") @NotNull UUID customerId, @NotNull @HeaderParam(HttpHeaders.IF_MATCH) Integer version, @Auth AuthenticatedUser authInfo,
+                                @HeaderParam(HttpHeaders.CONTENT_TYPE) @NotNull String fileType, @HeaderParam(HttpHeaders.CONTENT_LENGTH) Long fileSize, InputStream fileStream) throws IOException {
 
         if (fileSize.equals(0l)) {
             log.warn("action=uploadPhoto result=no-data customerId={} fileSize={}", customerId, fileSize);
@@ -53,7 +56,7 @@ public class UploadCustomerPhotoResource {
         }
 
         byte[] photoBytes = ByteStreams.toByteArray(ByteStreams.limit(fileStream, fileSize));
-        CustomerPhoto customerPhoto = uploadPhotoService.createPhotoForCustomer(customerId, fileType, photoBytes);
+        CustomerPhoto customerPhoto = uploadPhotoService.createPhotoForCustomer(customerId, version, fileType, photoBytes, authInfo.getUserId());
         log.info("action=uploadPhoto result=success customerId={} customerPhoto={}", customerId, customerPhoto);
         URI getPhotoPath = createResourcePath(customerPhoto.getCustomerId());
         return Response.status(Response.Status.CREATED).location(getPhotoPath).build();

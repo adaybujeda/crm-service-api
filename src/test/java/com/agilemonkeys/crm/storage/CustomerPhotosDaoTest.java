@@ -43,7 +43,7 @@ public class CustomerPhotosDaoTest extends RunningServiceBaseTest {
     @Test
     public void should_find_photo_by_customerId() {
         CustomerPhoto newPhoto = insertCustomerPhoto(UUID.randomUUID());
-        Optional<CustomerPhoto> byId = underTest.getCustomerPhotoById(newPhoto.getCustomerId());
+        Optional<CustomerPhoto> byId = underTest.getCustomerPhoto(newPhoto.getCustomerId());
         MatcherAssert.assertThat(byId.isPresent(), Matchers.is(true));
         MatcherAssert.assertThat(byId.get().getCustomerId(), Matchers.is(newPhoto.getCustomerId()));
         MatcherAssert.assertThat(byId.get().getContentType(), Matchers.is(newPhoto.getContentType()));
@@ -51,10 +51,27 @@ public class CustomerPhotosDaoTest extends RunningServiceBaseTest {
     }
 
     @Test
+    public void should_update_photo() {
+        CustomerPhoto existingPhoto = insertCustomerPhoto(UUID.randomUUID());
+        String newType = "updated";
+        byte[] newBytes = new byte[10];
+        LocalDateTime createdDate = LocalDateTime.now();
+        CustomerPhoto updatedPhoto = new CustomerPhoto(existingPhoto.getCustomerId(), newType, newBytes, createdDate);
+        int updated = underTest.updateCustomerPhoto(updatedPhoto);
+        MatcherAssert.assertThat(updated, Matchers.is(updated));
+
+        Optional<CustomerPhoto> result = underTest.getCustomerPhoto(existingPhoto.getCustomerId());
+        MatcherAssert.assertThat(result.isPresent(), Matchers.is(true));
+        MatcherAssert.assertThat(result.get().getCustomerId(), Matchers.is(updatedPhoto.getCustomerId()));
+        MatcherAssert.assertThat(result.get().getContentType(), Matchers.is(updatedPhoto.getContentType()));
+        MatcherAssert.assertThat(result.get().getCreatedDate(), Matchers.is(updatedPhoto.getCreatedDate()));
+    }
+
+    @Test
     public void should_delete_photo_when_deleting_customer() {
         CustomerPhoto newPhoto = insertCustomerPhoto(UUID.randomUUID());
         customerDao.deleteCustomer(newPhoto.getCustomerId());
-        Optional<CustomerPhoto> byId = underTest.getCustomerPhotoById(newPhoto.getCustomerId());
+        Optional<CustomerPhoto> byId = underTest.getCustomerPhoto(newPhoto.getCustomerId());
         MatcherAssert.assertThat(byId.isPresent(), Matchers.is(false));
     }
 

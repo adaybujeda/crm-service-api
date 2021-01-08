@@ -6,8 +6,155 @@
 	},
 	"item": [
 		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "RestPassword",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newPassword\": \"password1234\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/reset-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"octopus\",\n    \"password\": \"password1234\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "Users",
 			"item": [
+				{
+					"name": "GetAllUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/crm/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"crm",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserById",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/crm/users/{{userId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"crm",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "CreateUser",
 					"request": {
@@ -16,7 +163,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDk4MDQxMzQsImlhdCI6MTYwOTgwMDUzNCwiaXNzIjoiY3JtLXNlcnZpY2UtYXBpIiwic3ViIjoiMWEzYjk0MmUtOWE2Yy00M2MwLWI1MjYtMzJiMjdlMTEzOTc1Iiwicm9sZSI6IkFETUlOIn0.dvlNn2y7f8OnktPPisv2Hbdqa-_xRmSldDXMWJ7sa9Q",
+									"value": "{{authToken}}",
 									"type": "string"
 								}
 							]
@@ -56,7 +203,268 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDk3ODg0MjUsImlhdCI6MTYwOTc4NDgyNSwiaXNzIjoiY3JtLXNlcnZpY2UtYXBpIiwic3ViIjoiMWEzYjk0MmUtOWE2Yy00M2MwLWI1MjYtMzJiMjdlMTEzOTc1Iiwicm9sZSI6IkFETUlOIn0.zTx10pUvMStFMbFDYLtcxzkz-rG-VL7LEKBlpiv9ZxM",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "If-Match",
+								"type": "text",
+								"value": "7"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Agile Octopus\",\n    \"username\": \"octopus\",\n    \"role\": \"user\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/crm/users/{{userId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"crm",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateRole",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "If-Match",
+								"type": "text",
+								"value": "6"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"role\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/crm/users/{{userId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"crm",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/crm/users/{{userId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"crm",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "GetCustomer",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provideId\": \"123456\",\n    \"name\": \"Agile\",\n    \"surname\": \"Octopus\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/crm/customers/{{customerId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"crm",
+								"customers",
+								"{{customerId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllCustomers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provideId\": \"123456\",\n    \"name\": \"Agile\",\n    \"surname\": \"Octopus\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/crm/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"crm",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateCustomer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"provideId\": \"1234567\",\n    \"name\": \"Agile\",\n    \"surname\": \"Octopus\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/crm/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"crm",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateCustomer",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept-encoding": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
 									"type": "string"
 								}
 							]
@@ -76,10 +484,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Agile Octopus\",\n    \"username\": \"octopus\",\n    \"role\": \"admin\"\n}"
+							"raw": "{\n    \"provideId\": \"1234567\",\n    \"name\": \"Agile\",\n    \"surname\": \"Octopus\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/crm/users/9324ecd2-01fb-4c09-8a67-74ab352eaa0b",
+							"raw": "http://localhost:8080/crm/customers/{{customerId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -87,27 +495,32 @@
 							"port": "8080",
 							"path": [
 								"crm",
-								"users",
-								"9324ecd2-01fb-4c09-8a67-74ab352eaa0b"
+								"customers",
+								"{{customerId}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "UpdateRole",
+					"name": "DeleteCustomer",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept-encoding": true
+						}
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDk3ODg0MjUsImlhdCI6MTYwOTc4NDgyNSwiaXNzIjoiY3JtLXNlcnZpY2UtYXBpIiwic3ViIjoiMWEzYjk0MmUtOWE2Yy00M2MwLWI1MjYtMzJiMjdlMTEzOTc1Iiwicm9sZSI6IkFETUlOIn0.zTx10pUvMStFMbFDYLtcxzkz-rG-VL7LEKBlpiv9ZxM",
+									"value": "{{authToken}}",
 									"type": "string"
 								}
 							]
 						},
-						"method": "PATCH",
+						"method": "DELETE",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -122,10 +535,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"role\": \"admin\"\n}"
+							"raw": "{\n    \"provideId\": \"1234567\",\n    \"name\": \"Agile\",\n    \"surname\": \"Octopus\"\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/crm/users/1a3b942e-9a6c-43c0-b526-32b27e113975",
+							"raw": "http://localhost:8080/crm/customers/{{customerId}}",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -133,70 +546,47 @@
 							"port": "8080",
 							"path": [
 								"crm",
-								"users",
-								"1a3b942e-9a6c-43c0-b526-32b27e113975"
+								"customers",
+								"{{customerId}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "GetAllUsers",
+					"name": "UploadPhoto",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDk3ODg0MjUsImlhdCI6MTYwOTc4NDgyNSwiaXNzIjoiY3JtLXNlcnZpY2UtYXBpIiwic3ViIjoiMWEzYjk0MmUtOWE2Yy00M2MwLWI1MjYtMzJiMjdlMTEzOTc1Iiwicm9sZSI6IkFETUlOIn0.zTx10pUvMStFMbFDYLtcxzkz-rG-VL7LEKBlpiv9ZxM",
+									"value": "{{authToken}}",
 									"type": "string"
 								}
 							]
 						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/crm/users",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"crm",
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GetUserById",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {}
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDk3MTcwNjEsImlhdCI6MTYwOTcxNjQ2MSwiaXNzIjoiY3JtLXNlcnZpY2UtYXBpIiwic3ViIjoiYWVjMGY1YTQtNjUxYy00ZTg0LWE1ZjUtNjg2OTljNGNlZDIxIiwicm9sZSI6IkFETUlOIn0.5jF8JaIoHNLK9B2aFnQ8bGTb1vDW-JJWGBMGmH3x0fY",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text",
-								"disabled": true
+								"value": "image/png",
+								"type": "text"
+							},
+							{
+								"key": "If-Match",
+								"value": "1",
+								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "/home/developer/dev/crm-service-api/docs/sample2.png"
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/crm/users/1a3b942e-9a6c-43c0-b526-32b27e113975",
+							"raw": "http://localhost:8080/crm/customers/{{customerId}}/photo",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -204,30 +594,31 @@
 							"port": "8080",
 							"path": [
 								"crm",
-								"users",
-								"1a3b942e-9a6c-43c0-b526-32b27e113975"
+								"customers",
+								"{{customerId}}",
+								"photo"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "DeleteUser",
+					"name": "GetCustomerPhoto",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDk3ODg0MjUsImlhdCI6MTYwOTc4NDgyNSwiaXNzIjoiY3JtLXNlcnZpY2UtYXBpIiwic3ViIjoiMWEzYjk0MmUtOWE2Yy00M2MwLWI1MjYtMzJiMjdlMTEzOTc1Iiwicm9sZSI6IkFETUlOIn0.zTx10pUvMStFMbFDYLtcxzkz-rG-VL7LEKBlpiv9ZxM",
+									"value": "{{authToken}}",
 									"type": "string"
 								}
 							]
 						},
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/crm/users/9324ecd2-01fb-4c09-8a67-74ab352eaa0b",
+							"raw": "http://localhost:8080/crm/customers/{{customerId}}/photo",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -235,8 +626,9 @@
 							"port": "8080",
 							"path": [
 								"crm",
-								"users",
-								"9324ecd2-01fb-4c09-8a67-74ab352eaa0b"
+								"customers",
+								"{{customerId}}",
+								"photo"
 							]
 						}
 					},
@@ -244,76 +636,6 @@
 				}
 			],
 			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "Login",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"octopus\",\n    \"password\": \"password1234\"\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8080/auth/login",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"auth",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "RestPassword",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDk4MDQxMzQsImlhdCI6MTYwOTgwMDUzNCwiaXNzIjoiY3JtLXNlcnZpY2UtYXBpIiwic3ViIjoiMWEzYjk0MmUtOWE2Yy00M2MwLWI1MjYtMzJiMjdlMTEzOTc1Iiwicm9sZSI6IkFETUlOIn0.dvlNn2y7f8OnktPPisv2Hbdqa-_xRmSldDXMWJ7sa9Q",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"newPassword\": \"password1234\"\n}"
-				},
-				"url": {
-					"raw": "http://localhost:8080/auth/reset-password",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"auth",
-						"reset-password"
-					]
-				}
-			},
-			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}

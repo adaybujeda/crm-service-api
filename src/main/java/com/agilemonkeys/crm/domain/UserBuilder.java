@@ -75,6 +75,11 @@ public class UserBuilder {
         return this;
     }
 
+    public UserBuilder withNextVersion() {
+        this.version = version + 1;
+        return this;
+    }
+
     public UserBuilder withCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
         return this;
@@ -82,6 +87,11 @@ public class UserBuilder {
 
     public UserBuilder withUpdatedDate(LocalDateTime updatedDate) {
         this.updatedDate = updatedDate;
+        return this;
+    }
+
+    public UserBuilder withUpdatedDate() {
+        this.updatedDate = LocalDateTime.now();
         return this;
     }
 

@@ -14,7 +14,11 @@ public interface CustomerPhotosDao {
                "VALUES (:customerId, :contentType, :photo, :createdDate)")
     public int insertCustomerPhoto(@BindBean CustomerPhoto customerPhoto);
 
+    @SqlUpdate("UPDATE customer_photos SET content_type=:contentType, photo=:photo, created_date=:createdDate " +
+               "WHERE customer_id=:customerId")
+    public int updateCustomerPhoto(@BindBean CustomerPhoto customerPhoto);
+
     @SqlQuery("SELECT * FROM customer_photos WHERE customer_id = :customerId")
-    public Optional<CustomerPhoto> getCustomerPhotoById(@Bind("customerId") UUID customerId);
+    public Optional<CustomerPhoto> getCustomerPhoto(@Bind("customerId") UUID customerId);
 
 }

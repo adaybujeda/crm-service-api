@@ -2,7 +2,6 @@ package com.agilemonkeys.crm.services.customer;
 
 import com.agilemonkeys.crm.domain.Customer;
 import com.agilemonkeys.crm.domain.CustomerBuilder;
-import com.agilemonkeys.crm.exceptions.CrmServiceApiNotFoundException;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiStaleStateException;
 import com.agilemonkeys.crm.resources.customer.CreateUpdateCustomerRequest;
 import com.agilemonkeys.crm.storage.CustomersDao;
@@ -18,42 +17,34 @@ public class UpdateCustomerService {
     private static final Logger log = LoggerFactory.getLogger(UpdateCustomerService.class);
 
     private final CustomersDao customersDao;
+    private final CheckCustomerStateService checkCustomerStateService;
     private final DuplicatedIdService duplicatedIdService;
 
-    public UpdateCustomerService(CustomersDao customersDao, DuplicatedIdService duplicatedIdService) {
+    public UpdateCustomerService(CustomersDao customersDao, CheckCustomerStateService checkCustomerStateService, DuplicatedIdService duplicatedIdService) {
         this.customersDao = customersDao;
+        this.checkCustomerStateService = checkCustomerStateService;
         this.duplicatedIdService = duplicatedIdService;
     }
 
     public Customer updateCustomer(UUID customerId, Integer requestVersion, CreateUpdateCustomerRequest updateRequest, UUID updatedBy) {
-        Customer oldCustomer = checkExistingCustomerState(customerId, requestVersion);
-        duplicatedIdService.checkProvidedId(updateRequest.getProvidedId(), Optional.of(customerId));
-
+        Customer oldCustomer = checkCustomerStateService.checkCustomerState(customerId, requestVersion);
         Customer newCustomer = CustomerBuilder.from(oldCustomer)
                 .withProvidedId(updateRequest.getProvidedId())
                 .withName(updateRequest.getName())
                 .withSurname(updateRequest.getSurname())
-                .withVersion(oldCustomer.getVersion() + 1)
-                .withUpdatedDate(LocalDateTime.now())
+                .withNextVersion()
+                .withUpdatedDate()
                 .withUpdatedBy(updatedBy)
                 .build();
 
-        updateStorage(requestVersion, newCustomer);
+        updateCustomer(requestVersion, newCustomer);
         return newCustomer;
     }
 
-    private Customer checkExistingCustomerState(UUID customerId, Integer requestVersion) {
-        Optional<Customer> oldCustomer = customersDao.getCustomerById(customerId);
-        if (!oldCustomer.isPresent()) {
-            throw new CrmServiceApiNotFoundException(String.format("CustomerId: %s not found", customerId));
-        }
-
-        if (!oldCustomer.get().getVersion().equals(requestVersion)) {
-            log.warn("action=updateCustomer step=checkExistingCustomerState result=staleState customerId={} requestVersion={} dbCustomer={}", customerId, requestVersion, oldCustomer.get());
-            throw new CrmServiceApiStaleStateException(String.format("Invalid state for customerId: %s request version: %s found: %s", customerId, requestVersion, oldCustomer.get().getVersion()));
-        }
-
-        return oldCustomer.get();
+    public Customer updateCustomer(Integer requestVersion, Customer newCustomer) {
+        duplicatedIdService.checkProvidedId(newCustomer.getProvidedId(), Optional.of(newCustomer.getCustomerId()));
+        updateStorage(requestVersion, newCustomer);
+        return newCustomer;
     }
 
     private void updateStorage(Integer fromVersion, Customer newCustomer) {

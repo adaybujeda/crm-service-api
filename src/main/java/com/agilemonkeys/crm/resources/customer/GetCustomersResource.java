@@ -47,7 +47,7 @@ public class GetCustomersResource {
         return Response.ok(response).header(HttpHeaders.ETAG, customer.getVersion()).build();
     }
 
-    public static String createResourcePath(UUID userId) {
-        return String.format("%s/%s", PATH, userId);
+    public static String createResourcePath(UUID customerId) {
+        return String.format("%s/%s", PATH, customerId);
     }
 }

@@ -39,6 +39,6 @@ public class CreateCustomerResource {
         Customer createdCustomer = createCustomerService.createCustomer(authInfo.getUserId(), request);
         CreateCustomerResponse response = new CreateCustomerResponse(createdCustomer.getCustomerId());
         log.info("action=createCustomer result=success customerId={}", createdCustomer.getCustomerId());
-        return Response.created(URI.create("/")).header(HttpHeaders.ETAG, createdCustomer.getVersion()).entity(response).build();
+        return Response.created(URI.create(GetCustomersResource.createResourcePath(response.getCustomerId()))).header(HttpHeaders.ETAG, createdCustomer.getVersion()).entity(response).build();
     }
 }

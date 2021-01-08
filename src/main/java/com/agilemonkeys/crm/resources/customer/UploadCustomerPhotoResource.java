@@ -58,12 +58,12 @@ public class UploadCustomerPhotoResource {
         byte[] photoBytes = ByteStreams.toByteArray(ByteStreams.limit(fileStream, fileSize));
         CustomerPhoto customerPhoto = uploadPhotoService.createPhotoForCustomer(customerId, version, fileType, photoBytes, authInfo.getUserId());
         log.info("action=uploadPhoto result=success customerId={} customerPhoto={}", customerId, customerPhoto);
-        URI getPhotoPath = createResourcePath(customerPhoto.getCustomerId());
-        return Response.status(Response.Status.CREATED).location(getPhotoPath).build();
+        String getPhotoPath = createResourcePath(customerPhoto.getCustomerId());
+        return Response.status(Response.Status.CREATED).location(URI.create(getPhotoPath)).build();
     }
 
-    public static URI createResourcePath(UUID customerId) {
+    public static String createResourcePath(UUID customerId) {
         return UriBuilder.fromResource(UploadCustomerPhotoResource.class)
-                .resolveTemplate("customerId", customerId).build();
+                .resolveTemplate("customerId", customerId).build().toString();
     }
 }

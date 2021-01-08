@@ -35,4 +35,8 @@ public class DeleteCustomerResource {
         log.info("action=deleteCustomer result=success customerId={}", customerId);
         return Response.noContent().build();
     }
+
+    public static String createResourcePath(UUID customerId) {
+        return String.format("%s/%s", PATH, customerId);
+    }
 }

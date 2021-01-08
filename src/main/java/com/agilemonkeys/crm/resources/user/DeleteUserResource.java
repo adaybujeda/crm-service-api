@@ -34,4 +34,8 @@ public class DeleteUserResource {
         log.info("action=deleteUser result=success userId={}", userId);
         return Response.noContent().build();
     }
+
+    public static String createResourcePath(UUID userId) {
+        return String.format("%s/%s", PATH, userId);
+    }
 }

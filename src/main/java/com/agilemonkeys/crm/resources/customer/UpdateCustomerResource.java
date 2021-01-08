@@ -39,4 +39,8 @@ public class UpdateCustomerResource {
         log.info("action=updateCustomer result=success customerId={}", updatedCustomer.getCustomerId());
         return Response.noContent().build();
     }
+
+    public static String createResourcePath(UUID customerId) {
+        return String.format("%s/%s", PATH, customerId);
+    }
 }

@@ -96,6 +96,7 @@ public class UploadPhotoServiceTest {
 
     private void checkCustomerUpdate(Customer result) {
         MatcherAssert.assertThat(result.getCustomerId(), Matchers.is(EXISTING_CUSTOMER.getCustomerId()));
+        MatcherAssert.assertThat(result.getPhotoId(), Matchers.is(EXISTING_CUSTOMER.getCustomerId()));
         MatcherAssert.assertThat(result.getVersion(), Matchers.is(EXISTING_CUSTOMER.getVersion() + 1));
         MatcherAssert.assertThat(result.getUpdatedDate(), Matchers.not(Matchers.is(EXISTING_CUSTOMER.getUpdatedDate())));
         MatcherAssert.assertThat(result.getUpdatedBy(), Matchers.is(CREATED_BY));

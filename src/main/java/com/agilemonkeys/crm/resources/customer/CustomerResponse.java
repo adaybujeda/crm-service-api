@@ -14,6 +14,7 @@ public class CustomerResponse {
     private final String providedId;
     private final String name;
     private final String surname;
+    private final String photoUrl;
     private final LocalDateTime createdDate;
     private final UUID createdBy;
     private final LocalDateTime updatedDate;
@@ -21,13 +22,14 @@ public class CustomerResponse {
 
     @JsonCreator
     public CustomerResponse(@JsonProperty("customerId") UUID customerId, @JsonProperty("providedId") String providedId,
-                            @JsonProperty("name") String name, @JsonProperty("surname") String surname,
+                            @JsonProperty("name") String name, @JsonProperty("surname") String surname, @JsonProperty("photoUrl") String photoUrl,
                             @JsonProperty("createdDate") LocalDateTime createdDate, @JsonProperty("createdBy") UUID createdBy,
                             @JsonProperty("updatedDate") LocalDateTime updatedDate, @JsonProperty("updatedBy") UUID updatedBy) {
         this.customerId = customerId;
         this.providedId = providedId;
         this.name = name;
         this.surname = surname;
+        this.photoUrl = photoUrl;
         this.createdDate = createdDate;
         this.createdBy = createdBy;
         this.updatedDate = updatedDate;
@@ -50,6 +52,10 @@ public class CustomerResponse {
         return surname;
     }
 
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
@@ -67,8 +73,10 @@ public class CustomerResponse {
     }
 
     public static CustomerResponse from(Customer customer) {
+        String photoUrl = customer.getPhotoId() == null ? null : GetCustomerPhotoResource.createResourcePath(customer.getPhotoId());
         return new CustomerResponse(customer.getCustomerId(), customer.getProvidedId(),
                 customer.getName(), customer.getSurname(),
+                photoUrl,
                 customer.getCreatedDate(), customer.getCreatedBy(),
                 customer.getUpdatedDate(), customer.getUpdatedBy());
     }

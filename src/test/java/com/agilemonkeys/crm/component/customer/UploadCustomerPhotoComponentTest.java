@@ -2,9 +2,10 @@ package com.agilemonkeys.crm.component.customer;
 
 import com.agilemonkeys.crm.RunningServiceBaseTest;
 import com.agilemonkeys.crm.resources.auth.LoginResponse;
+import com.agilemonkeys.crm.resources.customer.GetCustomerPhotoResource;
 import com.agilemonkeys.crm.resources.customer.UploadCustomerPhotoResource;
-import com.agilemonkeys.crm.util.WithCustomer;
 import com.agilemonkeys.crm.util.WithPhoto;
+import com.agilemonkeys.crm.util.WithVersionedCustomer;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -12,10 +13,9 @@ import org.junit.Test;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.util.UUID;
 
-public class UploadCustomerPhotoComponentTest extends RunningServiceBaseTest implements WithPhoto, WithCustomer {
+public class UploadCustomerPhotoComponentTest extends RunningServiceBaseTest implements WithPhoto, WithVersionedCustomer {
 
     @Test
     public void should_return_401_when_not_authorized() {
@@ -59,6 +59,10 @@ public class UploadCustomerPhotoComponentTest extends RunningServiceBaseTest imp
         LoginResponse loginResponse = adminLogin();
         UUID customerId = createCustomer(loginResponse);
         createPhoto(loginResponse, customerId);
+
+        VersionedCustomer versionedCustomer = getVersionedCustomer(customerId);
+        MatcherAssert.assertThat(versionedCustomer.customer.getPhotoUrl(), Matchers.is(GetCustomerPhotoResource.createResourcePath(customerId)));
+        MatcherAssert.assertThat(versionedCustomer.version, Matchers.is(2));
     }
 
     @Test

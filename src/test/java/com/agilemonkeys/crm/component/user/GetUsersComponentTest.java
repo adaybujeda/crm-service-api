@@ -1,10 +1,12 @@
 package com.agilemonkeys.crm.component.user;
 
 import com.agilemonkeys.crm.RunningServiceBaseTest;
+import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.resources.auth.LoginResponse;
 import com.agilemonkeys.crm.resources.user.GetUsersResource;
 import com.agilemonkeys.crm.resources.user.UserResponse;
 import com.agilemonkeys.crm.resources.user.UserResponse.UserResponseCollection;
+import com.agilemonkeys.crm.util.WithAuth;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -63,5 +65,9 @@ public class GetUsersComponentTest extends RunningServiceBaseTest {
         MatcherAssert.assertThat(httpResponse.getHeaderString(HttpHeaders.ETAG), Matchers.notNullValue());
         UserResponse response = httpResponse.readEntity(UserResponse.class);
         MatcherAssert.assertThat(response.getUserId(), Matchers.is(loginResponse.getUserId()));
+        MatcherAssert.assertThat(response.getUsername(), Matchers.is(WithAuth.ADMIN_USERNAME));
+        MatcherAssert.assertThat(response.getName(), Matchers.notNullValue());
+        MatcherAssert.assertThat(response.getRole(), Matchers.is(UserRole.ADMIN));
+        MatcherAssert.assertThat(response.getDeletedDate(), Matchers.nullValue());
     }
 }

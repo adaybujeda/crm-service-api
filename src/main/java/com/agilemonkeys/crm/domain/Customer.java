@@ -13,18 +13,20 @@ public class Customer {
     private final String providedId;
     private final String name;
     private final String surname;
+    private final UUID photoId;
     private final Integer version;
     private final LocalDateTime createdDate;
     private final UUID createdBy;
     private final LocalDateTime updatedDate;
     private final UUID updatedBy;
 
-    @ConstructorProperties({"customer_id", "provided_id", "name", "surname", "version", "created_date", "created_by", "updated_date", "updated_by"})
-    public Customer(UUID customerId, String providedId, String name, String surname, Integer version, LocalDateTime createdDate, UUID createdBy, LocalDateTime updatedDate, UUID updatedBy) {
+    @ConstructorProperties({"customer_id", "provided_id", "name", "surname", "photo_id", "version", "created_date", "created_by", "updated_date", "updated_by"})
+    public Customer(UUID customerId, String providedId, String name, String surname, UUID photoId, Integer version, LocalDateTime createdDate, UUID createdBy, LocalDateTime updatedDate, UUID updatedBy) {
         this.customerId = customerId;
         this.providedId = providedId;
         this.name = name;
         this.surname = surname;
+        this.photoId = photoId;
         this.version = version;
         this.createdDate = createdDate;
         this.createdBy = createdBy;
@@ -46,6 +48,10 @@ public class Customer {
 
     public String getSurname() {
         return surname;
+    }
+
+    public UUID getPhotoId() {
+        return photoId;
     }
 
     public Integer getVersion() {
@@ -77,6 +83,7 @@ public class Customer {
                 && Objects.equals(this.providedId, other.providedId)
                 && Objects.equals(this.name, other.name)
                 && Objects.equals(this.surname, other.surname)
+                && Objects.equals(this.photoId, other.photoId)
                 && Objects.equals(this.version, other.version)
                 && Objects.equals(this.createdDate, other.createdDate)
                 && Objects.equals(this.createdBy, other.createdBy)
@@ -88,7 +95,8 @@ public class Customer {
     @Override
     public int hashCode() {
         return Objects.hash(
-                this.customerId, this.providedId, this.name, this.surname, this.version, this.createdDate, this.createdBy, this.updatedDate, this.updatedBy);
+                this.customerId, this.providedId, this.name, this.surname, this.photoId,
+                this.version, this.createdDate, this.createdBy, this.updatedDate, this.updatedBy);
 
     }
 

@@ -10,6 +10,7 @@ public class CustomerBuilder {
     private String providedId;
     private String name;
     private String surname;
+    private UUID photoId;
     private Integer version = 1;
     private LocalDateTime createdDate = LocalDateTime.now();
     private UUID createdBy;
@@ -28,6 +29,7 @@ public class CustomerBuilder {
                 .withProvidedId(customer.getProvidedId())
                 .withName(customer.getName())
                 .withSurname(customer.getSurname())
+                .withPhotoId(customer.getPhotoId())
                 .withVersion(customer.getVersion())
                 .withCreatedDate(customer.getCreatedDate())
                 .withCreatedBy(customer.getCreatedBy())
@@ -59,6 +61,11 @@ public class CustomerBuilder {
 
     public CustomerBuilder withSurname(String surname) {
         this.surname = surname;
+        return this;
+    }
+
+    public CustomerBuilder withPhotoId(UUID photoId) {
+        this.photoId = photoId;
         return this;
     }
 
@@ -98,6 +105,6 @@ public class CustomerBuilder {
     }
 
     public Customer build() {
-        return new Customer(customerId, providedId, name, surname, version, createdDate, createdBy, updatedDate, updatedBy);
+        return new Customer(customerId, providedId, name, surname, photoId, version, createdDate, createdBy, updatedDate, updatedBy);
     }
 }

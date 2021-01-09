@@ -52,7 +52,7 @@ public class CustomersDaoTest extends RunningServiceBaseTest {
 
     @Test
     public void should_get_all_customers_in_database() {
-        Customer newCustomer = insertCustomer(UUID.randomUUID());
+        insertCustomer(UUID.randomUUID());
         List<Customer> customers = underTest.getCustomers();
         MatcherAssert.assertThat(customers.isEmpty(), Matchers.is(false));
         MatcherAssert.assertThat(customers.size(), Matchers.greaterThan(0));

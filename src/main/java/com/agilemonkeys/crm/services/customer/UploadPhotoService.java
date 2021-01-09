@@ -37,6 +37,7 @@ public class UploadPhotoService {
         }
 
         Customer updatedCustomer = CustomerBuilder.from(customer).withNextVersion()
+                .withPhotoId(customerPhoto.getCustomerId())
                 .withUpdatedDate().withUpdatedBy(createdBy).build();
 
         updateCustomerService.updateCustomer(requestVersion, updatedCustomer);

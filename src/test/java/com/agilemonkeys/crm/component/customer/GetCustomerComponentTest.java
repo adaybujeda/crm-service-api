@@ -38,6 +38,15 @@ public class GetCustomerComponentTest extends RunningServiceBaseTest implements 
         UUID customerId = createCustomer(loginResponse);
         VersionedCustomer versionedCustomer = getVersionedCustomer(loginResponse, customerId);
         MatcherAssert.assertThat(versionedCustomer.customer.getCustomerId(), Matchers.is(customerId));
+        MatcherAssert.assertThat(versionedCustomer.customer.getProvidedId(), Matchers.notNullValue());
+        MatcherAssert.assertThat(versionedCustomer.customer.getName(), Matchers.notNullValue());
+        MatcherAssert.assertThat(versionedCustomer.customer.getSurname(), Matchers.notNullValue());
+        MatcherAssert.assertThat(versionedCustomer.customer.getPhotoUrl(), Matchers.nullValue());
+        MatcherAssert.assertThat(versionedCustomer.customer.getCreatedBy(), Matchers.is(loginResponse.getUserId()));
+        MatcherAssert.assertThat(versionedCustomer.customer.getCreatedDate(), Matchers.notNullValue());
+        MatcherAssert.assertThat(versionedCustomer.customer.getUpdatedBy(), Matchers.is(loginResponse.getUserId()));
+        MatcherAssert.assertThat(versionedCustomer.customer.getUpdatedDate(), Matchers.notNullValue());
+        MatcherAssert.assertThat(versionedCustomer.version, Matchers.is(1));
     }
 
     @Test

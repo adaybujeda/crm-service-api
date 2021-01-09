@@ -44,10 +44,10 @@ public class UsersApiAcceptanceTest extends RunningServiceBaseTest implements Wi
         MatcherAssert.assertThat(deleteUserResponse.getStatus(), Matchers.is(204));
         deleteUserResponse.close();
 
-        //VERIFY USER IS GONE
-        Response getUserResponse = getUserResponse(adminAuthInfo, userAuthInfo.getUserId());
-        MatcherAssert.assertThat(getUserResponse.getStatus(), Matchers.is(404));
-        getUserResponse.close();
+        //VERIFY DELETE
+        VersionedUser deletedUser = getVersionedUser(adminAuthInfo, userAuthInfo.getUserId());
+        MatcherAssert.assertThat(deletedUser.user.getDeletedDate(), Matchers.notNullValue());
+
     }
 
     private UUID createUser(LoginResponse authInfo, String username, String password, UserRole role) {

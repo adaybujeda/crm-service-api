@@ -3,7 +3,6 @@ package com.agilemonkeys.crm.storage;
 import com.agilemonkeys.crm.RunningServiceBaseTest;
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
-import com.agilemonkeys.crm.domain.UserRole;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -13,7 +12,6 @@ import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -69,7 +67,9 @@ public class UsersDaoTest extends RunningServiceBaseTest {
     public void should_update_user_when_old_version_match() {
         String username = UUID.randomUUID().toString();
         User oldUser = insertUser(UUID.randomUUID(), username, 1);
-        User updatedUser = new User(oldUser.getUserId(), "newName", "newUsername", "newPassword", UserRole.ADMIN, 10, oldUser.getCreatedDate(), LocalDateTime.now());
+        User updatedUser =UserBuilder.fromUser(oldUser)
+                .withName("newName").withNormalizedUsername("newUsername").withPasswordHash("mnewPassword")
+                .withUpdatedDate().build();
         int updatedRows = underTest.updateUser(updatedUser, oldUser.getVersion());
         MatcherAssert.assertThat(updatedRows, Matchers.is(1));
 
@@ -82,7 +82,9 @@ public class UsersDaoTest extends RunningServiceBaseTest {
     public void should_not_update_user_when_old_version_does_not_match() {
         String username = UUID.randomUUID().toString();
         User oldUser = insertUser(UUID.randomUUID(), username, 2);
-        User updatedUser = new User(oldUser.getUserId(), "newName", "newUsername", "newPassword", UserRole.ADMIN, 10, oldUser.getCreatedDate(), LocalDateTime.now());
+        User updatedUser =UserBuilder.fromUser(oldUser)
+                .withName("newName").withNormalizedUsername("newUsername").withPasswordHash("mnewPassword")
+                .withUpdatedDate().build();
         int updatedRows = underTest.updateUser(updatedUser, 1);
         MatcherAssert.assertThat(updatedRows, Matchers.is(0));
         MatcherAssert.assertThat(oldUser.getUserId(), Matchers.is(updatedUser.getUserId()));
@@ -99,7 +101,8 @@ public class UsersDaoTest extends RunningServiceBaseTest {
         MatcherAssert.assertThat(deletedUsers, Matchers.is(1));
 
         userById = underTest.getUserById(newUser.getUserId());
-        MatcherAssert.assertThat(userById.isPresent(), Matchers.is(false));
+        MatcherAssert.assertThat(userById.isPresent(), Matchers.is(true));
+        MatcherAssert.assertThat(userById.get().getDeletedDate(), Matchers.notNullValue());
     }
 
     private User createUser(UUID userId, String username, Integer version) {

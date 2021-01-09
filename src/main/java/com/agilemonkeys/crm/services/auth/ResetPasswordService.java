@@ -1,7 +1,6 @@
 package com.agilemonkeys.crm.services.auth;
 
 import com.agilemonkeys.crm.domain.User;
-import com.agilemonkeys.crm.domain.UserBuilder;
 import com.agilemonkeys.crm.services.user.GetUsersService;
 import com.agilemonkeys.crm.services.user.UpdateUserService;
 import org.slf4j.Logger;
@@ -27,12 +26,7 @@ public class ResetPasswordService {
         User oldUser = getUsersService.getUserById(userId);
         String passwordHash = passwordHashService.hashPassword(newPassword);
 
-        User userWithNewPassword = UserBuilder.fromUser(oldUser)
-                .withPasswordHash(passwordHash)
-                .withNextVersion()
-                .withUpdatedDate()
-                .build();
-        User updatedUser = updateUserService.updateUser(oldUser.getVersion(), userWithNewPassword);
+        User updatedUser = updateUserService.resetPassword(userId, oldUser.getVersion(), passwordHash);
         log.info("action=resetPassword result=success userId={} updatedUser={}", updatedUser.getUserId(), updatedUser);
         return updatedUser;
     }

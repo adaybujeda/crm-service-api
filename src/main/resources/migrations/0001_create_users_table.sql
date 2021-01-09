@@ -10,6 +10,7 @@ CREATE TABLE users (
   version INT NOT NULL,
   created_date TIMESTAMP NOT NULL,
   updated_date TIMESTAMP NOT NULL,
+  deleted_date TIMESTAMP,
 
   CONSTRAINT users_username UNIQUE (username)
 );

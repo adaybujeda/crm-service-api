@@ -3,6 +3,7 @@ package com.agilemonkeys.crm.services.user;
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
 import com.agilemonkeys.crm.domain.UserRole;
+import com.agilemonkeys.crm.exceptions.CrmServiceApiDeletedException;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiNotFoundException;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiStaleStateException;
 import com.agilemonkeys.crm.resources.user.UpdateUserRequest;
@@ -18,6 +19,7 @@ public class UpdateUserService {
     private static final Logger log = LoggerFactory.getLogger(UpdateUserService.class);
     private static final String UPDATE_USER = "updateUser";
     private static final String UPDATE_ROLE = "updateRole";
+    private static final String RESET_PASSWORD = "resetPassword";
 
     private final UsersDao usersDao;
     private final DuplicatedUserService duplicatedUserService;
@@ -38,12 +40,19 @@ public class UpdateUserService {
                 .withCreatedDate(oldUser.getCreatedDate())
                 .build();
 
-        return updateUser(requestVersion, newUser);
+        duplicatedUserService.checkUsername(newUser.getUsername(), Optional.of(newUser.getUserId()));
+        return updateStorage(UPDATE_USER, newUser, requestVersion);
     }
 
-    public User updateUser(Integer currentVersion, User newUser) {
-        duplicatedUserService.checkUsername(newUser.getUsername(), Optional.of(newUser.getUserId()));
-        return updateStorage(UPDATE_USER, newUser, currentVersion);
+    public User resetPassword(UUID userId, Integer requestVersion, String newPasswordHash) {
+        User oldUser = checkExistingUserState(RESET_PASSWORD, userId, requestVersion);
+        User newUser = UserBuilder.fromUser(oldUser)
+                .withPasswordHash(newPasswordHash)
+                .withNextVersion()
+                .withUpdatedDate()
+                .build();
+
+        return updateStorage(UPDATE_USER, newUser, requestVersion);
     }
 
     public User updateRole(UUID userId, Integer requestVersion, UserRole newRole) {
@@ -61,6 +70,10 @@ public class UpdateUserService {
         Optional<User> oldUser = usersDao.getUserById(userId);
         if (!oldUser.isPresent()) {
             throw new CrmServiceApiNotFoundException(String.format("UserId: %s not found", userId));
+        }
+
+        if (oldUser.get().isDeleted()) {
+            throw new CrmServiceApiDeletedException(String.format("Deleted userId: %s cannot be updated", userId));
         }
 
         if (!oldUser.get().getVersion().equals(requestVersion)) {

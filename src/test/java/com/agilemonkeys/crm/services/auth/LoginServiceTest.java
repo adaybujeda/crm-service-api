@@ -48,6 +48,16 @@ public class LoginServiceTest {
     }
 
     @Test(expected = CrmServiceApiAuthException.class)
+    public void should_throw_auth_exception_when_user_is_deleted() {
+        LoginRequest loginRequest = new LoginRequest("username", "password");
+        User deletedUser = UserBuilder.builder().withDeletedDate().build();
+        Mockito.when(getUsersService.getUserByUsername("username")).thenReturn(Optional.of(deletedUser));
+        Mockito.when(crmPasswordHashService.checkPassword(loginRequest.getPassword(), deletedUser.getPasswordHash())).thenReturn(true);
+
+        underTest.login(loginRequest);
+    }
+
+    @Test(expected = CrmServiceApiAuthException.class)
     public void should_throw_auth_exception_when_password_does_not_match() {
         LoginRequest loginRequest = new LoginRequest("username", "password");
         Mockito.when(getUsersService.getUserByUsername("username")).thenReturn(Optional.of(USER));

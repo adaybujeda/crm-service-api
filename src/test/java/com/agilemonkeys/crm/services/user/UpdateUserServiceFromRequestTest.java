@@ -3,12 +3,11 @@ package com.agilemonkeys.crm.services.user;
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
 import com.agilemonkeys.crm.domain.UserRole;
+import com.agilemonkeys.crm.exceptions.CrmServiceApiDeletedException;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiDuplicatedException;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiNotFoundException;
 import com.agilemonkeys.crm.exceptions.CrmServiceApiStaleStateException;
 import com.agilemonkeys.crm.resources.user.UpdateUserRequest;
-import com.agilemonkeys.crm.services.user.DuplicatedUserService;
-import com.agilemonkeys.crm.services.user.UpdateUserService;
 import com.agilemonkeys.crm.storage.UsersDao;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -63,6 +62,17 @@ public class UpdateUserServiceFromRequestTest {
         Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
         Mockito.doThrow(new CrmServiceApiDuplicatedException("test")).when(duplicatedUserService).checkUsername(request.getUsername(), Optional.of(USER_ID));
 
+        underTest.updateUser(USER_ID, version, request);
+    }
+
+    @Test(expected = CrmServiceApiDeletedException.class)
+    public void updateUser_should_throw_deleted_exception_when_when_user_is_deleted() {
+        Integer version = 10;
+        User dbUser = UserBuilder.builder().withVersion(version).withDeletedDate().build();
+        Mockito.when(usersDao.getUserById(USER_ID)).thenReturn(Optional.of(dbUser));
+        Mockito.when(usersDao.updateUser(Mockito.any(User.class), Mockito.eq(version))).thenReturn(1);
+
+        UpdateUserRequest request = createRequest();
         underTest.updateUser(USER_ID, version, request);
     }
 

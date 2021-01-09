@@ -116,8 +116,12 @@ An additional validation could be done when decoding the token, but decided not 
 As there are no explicit requirements, usernames are case-insensitive.
 
 **Delete User:**
+I have implemented soft deletes. This will simply add a flag to the `deletedDate` flag to the User record to indicate that is deleted.
+Deleted users cannot log-in or be updated. This is to support getting the information of who created/updated customer records after users are deleted.
+
 To be client friendly, deletes are always successful regardless of whether a user was deleted or not.  
 A "feature" I discovered while testing is that a user can delete its own user record.
+
 
 **ForbiddenException:**
 When a request is authenticated, but the role is not authorized for a particular resource, Dropwizard returns a 403 with tha custom error message.

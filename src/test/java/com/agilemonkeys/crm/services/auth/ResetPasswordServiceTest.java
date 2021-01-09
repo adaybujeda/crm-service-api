@@ -32,10 +32,12 @@ public class ResetPasswordServiceTest {
 
     @Test(expected = RuntimeException.class)
     public void should_propagate_exceptions_from_UpdateUserService() {
+        String newPassword = "new-password";
         Mockito.when(getUsersService.getUserById(USER_ID)).thenReturn(USER);
-        Mockito.when(updateUserService.updateUser(USER.getVersion(), USER)).thenThrow(new RuntimeException("anything"));
+        Mockito.when(passwordHashService.hashPassword(newPassword)).thenReturn("PASSWORD_HASH");
+        Mockito.when(updateUserService.resetPassword(USER_ID, USER.getVersion(), "PASSWORD_HASH")).thenThrow(new RuntimeException("anything"));
 
-        underTest.resetPassword(USER_ID, "new-password");
+        underTest.resetPassword(USER_ID, newPassword);
     }
 
     @Test
@@ -45,7 +47,7 @@ public class ResetPasswordServiceTest {
         Mockito.when(passwordHashService.hashPassword(newPassword)).thenReturn("PASSWORD_HASH");
 
         User updatedUser = UserBuilder.builder().withUserId(USER_ID).build();
-        Mockito.when(updateUserService.updateUser(Mockito.eq(USER.getVersion()), Mockito.any(User.class))).thenReturn(updatedUser);
+        Mockito.when(updateUserService.resetPassword(USER_ID, USER.getVersion(), "PASSWORD_HASH")).thenReturn(updatedUser);
 
         User result = underTest.resetPassword(USER_ID, newPassword);
 
@@ -53,10 +55,6 @@ public class ResetPasswordServiceTest {
         Mockito.verify(getUsersService).getUserById(USER_ID);
         Mockito.verify(passwordHashService).hashPassword(newPassword);
         ArgumentCaptor<User> userWithNewPassword = ArgumentCaptor.forClass(User.class);
-        Mockito.verify(updateUserService).updateUser(Mockito.eq(USER.getVersion()), userWithNewPassword.capture());
-
-        MatcherAssert.assertThat(userWithNewPassword.getValue().getPasswordHash(), Matchers.is("PASSWORD_HASH"));
-        MatcherAssert.assertThat(userWithNewPassword.getValue().getVersion(), Matchers.is(USER.getVersion() + 1));
-        MatcherAssert.assertThat(userWithNewPassword.getValue().getUpdatedDate(), Matchers.greaterThan(USER.getUpdatedDate()));
+        Mockito.verify(updateUserService).resetPassword(USER_ID, USER.getVersion(), "PASSWORD_HASH");
     }
 }

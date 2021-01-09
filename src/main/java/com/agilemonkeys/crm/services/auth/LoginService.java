@@ -31,6 +31,11 @@ public class LoginService {
             throw new CrmServiceApiAuthException("Invalid credentials");
         }
 
+        if (user.get().isDeleted()) {
+            log.warn("action=login result=deleted-user username={}", loginRequest.getUsername());
+            throw new CrmServiceApiAuthException("Invalid credentials");
+        }
+
         boolean isPasswordOK = crmPasswordHashService.checkPassword(loginRequest.getPassword(), user.get().getPasswordHash());
 
         if (!isPasswordOK) {

@@ -17,9 +17,10 @@ public class User {
     private final Integer version;
     private final LocalDateTime createdDate;
     private final LocalDateTime updatedDate;
+    private final LocalDateTime deletedDate;
 
-    @ConstructorProperties({"user_id", "name", "username", "password_hash", "role", "version", "created_date", "updated_date"})
-    public User(UUID userId, String name, String username, String passwordHash, UserRole role, Integer version, LocalDateTime createdDate, LocalDateTime updatedDate) {
+    @ConstructorProperties({"user_id", "name", "username", "password_hash", "role", "version", "created_date", "updated_date", "deleted_date"})
+    public User(UUID userId, String name, String username, String passwordHash, UserRole role, Integer version, LocalDateTime createdDate, LocalDateTime updatedDate, LocalDateTime deletedDate) {
         this.userId = userId;
         this.name = name;
         this.username = username;
@@ -28,6 +29,7 @@ public class User {
         this.version = version;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
+        this.deletedDate = deletedDate;
     }
 
     public UUID getUserId() {
@@ -62,6 +64,14 @@ public class User {
         return updatedDate;
     }
 
+    public LocalDateTime getDeletedDate() {
+        return deletedDate;
+    }
+
+    public boolean isDeleted() {
+        return deletedDate != null;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
@@ -74,14 +84,15 @@ public class User {
                 && Objects.equals(this.role, other.role)
                 && Objects.equals(this.version, other.version)
                 && Objects.equals(this.createdDate, other.createdDate)
-                && Objects.equals(this.updatedDate, other.updatedDate);
+                && Objects.equals(this.updatedDate, other.updatedDate)
+                && Objects.equals(this.deletedDate, other.deletedDate);
 
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
-                this.userId, this.name, this.username, this.passwordHash, this.role, this.version, this.createdDate, this.updatedDate);
+                this.userId, this.name, this.username, this.passwordHash, this.role, this.version, this.createdDate, this.updatedDate, this.deletedDate);
 
     }
 
@@ -92,6 +103,7 @@ public class User {
                 .add("role", role)
                 .add("version", version)
                 .add("updatedDate", updatedDate)
+                .add("deletedDate", deletedDate)
                 .toString();
     }
 }

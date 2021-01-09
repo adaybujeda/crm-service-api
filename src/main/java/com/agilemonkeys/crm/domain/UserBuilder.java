@@ -15,6 +15,7 @@ public class UserBuilder {
     private Integer version = 1;
     private LocalDateTime createdDate = LocalDateTime.now();
     private LocalDateTime updatedDate = LocalDateTime.now();
+    private LocalDateTime deletedDate;
 
     private UserBuilder(){
     }
@@ -30,7 +31,8 @@ public class UserBuilder {
                 .withRole(user.getRole())
                 .withVersion(user.getVersion())
                 .withCreatedDate(user.getCreatedDate())
-                .withUpdatedDate(user.getUpdatedDate());
+                .withUpdatedDate(user.getUpdatedDate())
+                .withDeletedDate(user.getDeletedDate());
     }
 
     public static UserBuilder fromRequest(CreateUserRequest request) {
@@ -91,11 +93,19 @@ public class UserBuilder {
     }
 
     public UserBuilder withUpdatedDate() {
-        this.updatedDate = LocalDateTime.now();
+        return withUpdatedDate(LocalDateTime.now());
+    }
+
+    public UserBuilder withDeletedDate(LocalDateTime deletedDate) {
+        this.deletedDate = deletedDate;
         return this;
     }
 
+    public UserBuilder withDeletedDate() {
+        return withDeletedDate(LocalDateTime.now());
+    }
+
     public User build() {
-        return new User(userId, name, username, passwordHash, role, version, createdDate, updatedDate);
+        return new User(userId, name, username, passwordHash, role, version, createdDate, updatedDate, deletedDate);
     }
 }

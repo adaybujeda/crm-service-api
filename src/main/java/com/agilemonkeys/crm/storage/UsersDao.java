@@ -6,6 +6,7 @@ import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,8 +20,12 @@ public interface UsersDao {
                "WHERE user_id=:userId AND version=:oldVersion")
     public int updateUser(@BindBean User user, @Bind("oldVersion") Integer oldVersion);
 
-    @SqlUpdate("DELETE FROM users WHERE user_id=:userId")
-    public int deleteUser(@Bind("userId") UUID userId);
+    @SqlUpdate("UPDATE users SET deleted_date=:deletedDate WHERE user_id=:userId")
+    public int deleteUser(@Bind("userId") UUID userId, @Bind("deletedDate") LocalDateTime deletedDate);
+
+    public default int deleteUser(UUID userId) {
+        return deleteUser(userId, LocalDateTime.now());
+    }
 
     @SqlQuery("SELECT * FROM users")
     public List<User> getUsers();

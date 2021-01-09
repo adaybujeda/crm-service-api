@@ -28,7 +28,7 @@ public class CustomersApiAcceptanceTest extends RunningServiceBaseTest implement
     private static final String USER_PASSWORD = "P4ssword!";
 
     @Test
-    public void user_api_acceptance_test() throws Exception {
+    public void customer_api_acceptance_test() throws Exception {
         //CREATE NEW USER
         LoginResponse rootAuthInfo = login(WithAuth.ADMIN_USERNAME, WithAuth.ADMIN_PASSWORD);
         //CREATE REGULAR USER

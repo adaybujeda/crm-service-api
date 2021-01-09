@@ -4,3 +4,4 @@
 * Password complexity validation
 * Get all Users and Customer pagination
 * Review reset-password flow
+* Review User deletion and username lifecycle logic

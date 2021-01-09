@@ -7,6 +7,7 @@ traits:
   unauthorized-error: !include unauthorized-error.raml
   invalid-request-error: !include invalid-error.raml
   duplicated-error: !include duplicated-error.raml
+  deleted-error: !include deleted-error.raml
   not-found-error: !include not-found-error.raml
   stale-entity-error: !include stale-entity-error.raml
   authorized:
@@ -76,7 +77,7 @@ traits:
                                 "role": "user"
                             }
         put:
-            is: [stale-entity-error, duplicated-error]
+            is: [stale-entity-error, duplicated-error, deleted-error]
             headers:
                 If-Match:
                     description: The user version number returned in the GET call.
@@ -92,7 +93,7 @@ traits:
                 204:
         patch:
             description: To make a user and admin or to remove admin privileges to a user.
-            is: [stale-entity-error]
+            is: [stale-entity-error, deleted-error]
             headers:
                 If-Match:
                     description: The user version number returned in the GET call.

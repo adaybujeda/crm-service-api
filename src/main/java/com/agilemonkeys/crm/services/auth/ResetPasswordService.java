@@ -1,6 +1,7 @@
 package com.agilemonkeys.crm.services.auth;
 
 import com.agilemonkeys.crm.domain.User;
+import com.agilemonkeys.crm.exceptions.CrmServiceApiAuthException;
 import com.agilemonkeys.crm.services.user.GetUsersService;
 import com.agilemonkeys.crm.services.user.UpdateUserService;
 import org.slf4j.Logger;
@@ -24,6 +25,11 @@ public class ResetPasswordService {
 
     public User resetPassword(UUID userId, String newPassword) {
         User oldUser = getUsersService.getUserById(userId);
+        if (oldUser.isDeleted()) {
+            log.warn("action=resetPassword result=deleted-user userId={}", userId);
+            throw new CrmServiceApiAuthException("Invalid credentials");
+        }
+
         String passwordHash = passwordHashService.hashPassword(newPassword);
 
         User updatedUser = updateUserService.resetPassword(userId, oldUser.getVersion(), passwordHash);

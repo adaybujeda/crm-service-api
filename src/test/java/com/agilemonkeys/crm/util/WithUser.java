@@ -12,18 +12,18 @@ import org.hamcrest.Matchers;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import java.util.Optional;
 import java.util.UUID;
 
 public interface WithUser extends WithAuth {
 
-    public default Response createUserResponse(LoginResponse loginResponse, Optional<String> username, UserRole role) {
-        CreateUserRequest request = createRandomValidRequest(username, role);
+    public default Response createUserResponse(LoginResponse loginResponse, String username, String password, UserRole role) {
+        CreateUserRequest request = new CreateUserRequest(UUID.randomUUID().toString(),
+                username, password, role);
         return authorizedRequest(loginResponse, CreateUserResource.PATH).post(Entity.json(request));
     }
 
-    public default UUID createUser(LoginResponse loginResponse, Optional<String> username, UserRole role) {
-        Response httpResponse = createUserResponse(loginResponse, username, role);
+    public default UUID createUser(LoginResponse loginResponse, String username, String password, UserRole role) {
+        Response httpResponse = createUserResponse(loginResponse, username, password, role);
 
         MatcherAssert.assertThat(httpResponse.getStatus(), Matchers.is(201));
         MatcherAssert.assertThat(httpResponse.getHeaderString(HttpHeaders.ETAG), Matchers.is("1"));
@@ -33,13 +33,6 @@ public interface WithUser extends WithAuth {
         MatcherAssert.assertThat(httpResponse.getHeaderString(HttpHeaders.LOCATION), Matchers.containsString(response.getUserId().toString()));
         MatcherAssert.assertThat(response.getUserId(), Matchers.notNullValue());
         return response.getUserId();
-    }
-
-    public default CreateUserRequest createRandomValidRequest(Optional<String> username, UserRole role) {
-        return new CreateUserRequest(UUID.randomUUID().toString(),
-                username.orElse(UUID.randomUUID().toString()),
-                UUID.randomUUID().toString(),
-                role);
     }
 
     public default Response getUserResponse(UUID userId) {

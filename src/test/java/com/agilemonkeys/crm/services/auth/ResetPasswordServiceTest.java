@@ -2,6 +2,7 @@ package com.agilemonkeys.crm.services.auth;
 
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
+import com.agilemonkeys.crm.exceptions.CrmServiceApiAuthException;
 import com.agilemonkeys.crm.services.user.GetUsersService;
 import com.agilemonkeys.crm.services.user.UpdateUserService;
 import org.hamcrest.MatcherAssert;
@@ -36,6 +37,15 @@ public class ResetPasswordServiceTest {
         Mockito.when(getUsersService.getUserById(USER_ID)).thenReturn(USER);
         Mockito.when(passwordHashService.hashPassword(newPassword)).thenReturn("PASSWORD_HASH");
         Mockito.when(updateUserService.resetPassword(USER_ID, USER.getVersion(), "PASSWORD_HASH")).thenThrow(new RuntimeException("anything"));
+
+        underTest.resetPassword(USER_ID, newPassword);
+    }
+
+    @Test(expected = CrmServiceApiAuthException.class)
+    public void should_throw_auth_exception_when_user_is_deleted() {
+        String newPassword = "new-password";
+        User deletedUser = UserBuilder.builder().withDeletedDate().build();
+        Mockito.when(getUsersService.getUserById(USER_ID)).thenReturn(deletedUser);
 
         underTest.resetPassword(USER_ID, newPassword);
     }

@@ -3,7 +3,9 @@ package com.agilemonkeys.crm.acceptance;
 import com.agilemonkeys.crm.RunningServiceBaseTest;
 import com.agilemonkeys.crm.domain.UserRole;
 import com.agilemonkeys.crm.resources.auth.LoginResponse;
-import com.agilemonkeys.crm.resources.user.*;
+import com.agilemonkeys.crm.resources.user.DeleteUserResource;
+import com.agilemonkeys.crm.resources.user.UpdateUserRequest;
+import com.agilemonkeys.crm.resources.user.UpdateUserResource;
 import com.agilemonkeys.crm.util.WithAuth;
 import com.agilemonkeys.crm.util.WithVersionedUser;
 import org.hamcrest.MatcherAssert;
@@ -47,19 +49,12 @@ public class UsersApiAcceptanceTest extends RunningServiceBaseTest implements Wi
         //VERIFY DELETE
         VersionedUser deletedUser = getVersionedUser(adminAuthInfo, userAuthInfo.getUserId());
         MatcherAssert.assertThat(deletedUser.user.getDeletedDate(), Matchers.notNullValue());
-
-    }
-
-    private UUID createUser(LoginResponse authInfo, String username, String password, UserRole role) {
-        CreateUserRequest adminUserRequest = new CreateUserRequest(UUID.randomUUID().toString(), username, password, role);
-        CreateUserResponse createUserResponse = authorizedRequest(authInfo, CreateUserResource.PATH).post(Entity.json(adminUserRequest)).readEntity(CreateUserResponse.class);
-       return createUserResponse.getUserId();
     }
 
     private void updateUser(LoginResponse authInfo, UUID userId, String newUsername) {
         VersionedUser versionedUser = getVersionedUser(authInfo, userId);
         UpdateUserRequest updateRequest = new UpdateUserRequest(versionedUser.user.getName(), newUsername, versionedUser.user.getRole());
-        String path = String.format("%s/%s", UpdateUserResource.PATH, userId);
+        String path = UpdateUserResource.createResourcePath(userId);
         Invocation.Builder requestBuilder = authorizedRequest(authInfo, path);
         addVersion(requestBuilder, versionedUser.version);
         Response updateResponse = requestBuilder.put(Entity.json(updateRequest));

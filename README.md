@@ -104,6 +104,12 @@ After taking a look at the libraries recommended by the JWT site: `https://jwt.i
 `https://github.com/FusionAuth/fusionauth-jwt`
 
 ## Technical Notes
+**SQL injection prevention:**
+I am using JDBI3, using prepared statements under the hood. All user input is managed/sanitized by the JDBC driver. As well, I am not generating any SQL statements dynamically. These are the techniques that I know of to prevent SQL injection attacks.
+
+**XSS prevention:**
+As this is a pure back-end API, there are no measures to prevent XSS. In previous roles, we have implemented these measures in services that render HTML/JS or interact directly with the browser.
+
 **Resource Collections - Pagination:**
 I have left out collections pagination initially. This is for getting all users or customers WS.
 This will be a problem once the users or customer collection reaches a certain number of items.

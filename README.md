@@ -4,8 +4,13 @@ RESTfull API to manage users and customers. Basic CRUD operations to manage User
 ### Local environment
 The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 
+[Postman collection](docs/crm-service-api.postman.json)
+
 ### Running the service locally
 **With local DB under `/tmp/crm-service-db`**
+
+Run these commands from the project root folder.
+
 * Build the service:
 * `mvn clean install`
 * Delete the database to start fresh:
@@ -19,7 +24,9 @@ The service has been developed using **OpenJDK 11** and **Maven 3.6.3**
 * Some test URLs:
 * `curl -v http://localhost:8081/healthcheck`
 * `curl -v http://localhost:8080/crm/users`
-* [Postman collection](docs/crm-service-api.postman.json)
+
+### Running the service locally with Docker
+Instructions on how to run with Docker [here](docs/docker.md)
 
 ## API specification
 **Auth**  

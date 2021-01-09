@@ -61,7 +61,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"octopus\",\n    \"password\": \"password1234\"\n}"
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"changeme\"\n}"
 						},
 						"url": {
 							"raw": "http://localhost:8080/auth/login",

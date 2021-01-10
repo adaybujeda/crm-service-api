@@ -16,31 +16,21 @@ public class UploadPhotoService {
 
     private final CustomerPhotosDao customerPhotosDao;
     private final CheckCustomerStateService checkCustomerStateService;
-    private final UpdateCustomerService updateCustomerService;
 
-    public UploadPhotoService(CustomerPhotosDao customerPhotosDao, CheckCustomerStateService checkCustomerStateService, UpdateCustomerService updateCustomerService) {
+    public UploadPhotoService(CustomerPhotosDao customerPhotosDao, CheckCustomerStateService checkCustomerStateService) {
         this.customerPhotosDao = customerPhotosDao;
         this.checkCustomerStateService = checkCustomerStateService;
-        this.updateCustomerService = updateCustomerService;
     }
 
     public CustomerPhoto createPhotoForCustomer(UUID customerId, Integer requestVersion, String fileType, byte[] photoData, UUID createdBy) {
         Customer customer = checkCustomerStateService.checkCustomerState(customerId, requestVersion);
 
         CustomerPhoto customerPhoto = new CustomerPhoto(customerId, fileType, photoData, LocalDateTime.now());
-        if(customerPhotosDao.getCustomerPhoto(customerId).isEmpty()) {
-            customerPhotosDao.insertCustomerPhoto(customerPhoto);
-            log.info("action=createImage insert-photo customerId={}", customerId, customerPhoto);
-        } else {
-            customerPhotosDao.updateCustomerPhoto(customerPhoto);
-            log.info("action=createImage update-photo customerId={}", customerId, customerPhoto);
-        }
-
         Customer updatedCustomer = CustomerBuilder.from(customer).withNextVersion()
                 .withPhotoId(customerPhoto.getCustomerId())
                 .withUpdatedDate().withUpdatedBy(createdBy).build();
 
-        updateCustomerService.updateCustomer(requestVersion, updatedCustomer);
+        customerPhotosDao.updateCustomerWithNewPhoto(updatedCustomer, customerPhoto, requestVersion);
         log.info("action=createImage result=success customerId={} customerPhoto={} customer={}", customerId, customerPhoto, updatedCustomer);
         return customerPhoto;
     }

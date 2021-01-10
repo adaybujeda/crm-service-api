@@ -127,6 +127,13 @@ Could be added at a later point, but clients will have to be updated to get the 
 These are generated containing the user role. Tokens could have the wrong role or be valid for a deleted user until it expires.
 An additional validation could be done when decoding the token, but decided not to implement it for simplicity and performance.
 
+**Transaction Management:**
+There is only one instance where transaction management is needed, upload customer photo: `UploadPhotoService/CustomerPhotosDao`.
+This is the only service to execute more than one update per request, create/update the photo + update the customer record.
+I have wrapped the 2 updates into a single DAO method as per JDBI specifications for transactions. It is not as elegant as the Hibernate integration in dropwizard with `@UniOfWork`, but it works.
+
+Something to review for phase 2.
+
 **Usernames:**
 As there are no explicit requirements, I have implemented case-insensitive usernames.
 

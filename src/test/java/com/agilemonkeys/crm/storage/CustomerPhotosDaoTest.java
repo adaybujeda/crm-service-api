@@ -3,6 +3,7 @@ package com.agilemonkeys.crm.storage;
 import com.agilemonkeys.crm.RunningServiceBaseTest;
 import com.agilemonkeys.crm.domain.Customer;
 import com.agilemonkeys.crm.domain.CustomerPhoto;
+import com.agilemonkeys.crm.exceptions.CrmServiceApiStaleStateException;
 import com.agilemonkeys.crm.util.CustomerFactory;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
@@ -10,6 +11,7 @@ import org.hamcrest.Matchers;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.reflect.ConstructorMapper;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,8 +20,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class CustomerPhotosDaoTest extends RunningServiceBaseTest {
-
-    private static CustomersDao customerDao;
 
     private static CustomerPhotosDao underTest;
 
@@ -31,7 +31,6 @@ public class CustomerPhotosDaoTest extends RunningServiceBaseTest {
         jdbi.registerRowMapper(ConstructorMapper.factory(Customer.class));
         jdbi.registerRowMapper(ConstructorMapper.factory(CustomerPhoto.class));
 
-        customerDao = jdbi.onDemand(CustomersDao.class);
         underTest = jdbi.onDemand(CustomerPhotosDao.class);
     }
 
@@ -58,8 +57,8 @@ public class CustomerPhotosDaoTest extends RunningServiceBaseTest {
         byte[] newBytes = new byte[10];
         LocalDateTime createdDate = LocalDateTime.now();
         CustomerPhoto updatedPhoto = new CustomerPhoto(existingPhoto.getCustomerId(), newType, newBytes, createdDate);
-        int updated = underTest.updateCustomerPhoto(updatedPhoto);
-        MatcherAssert.assertThat(updated, Matchers.is(updated));
+        int updated = underTest.updateCustomer(updatedPhoto);
+        MatcherAssert.assertThat(updated, Matchers.is(1));
 
         Optional<CustomerPhoto> result = underTest.getCustomerPhoto(existingPhoto.getCustomerId());
         MatcherAssert.assertThat(result.isPresent(), Matchers.is(true));
@@ -69,9 +68,27 @@ public class CustomerPhotosDaoTest extends RunningServiceBaseTest {
     }
 
     @Test
+    public void should_not_create_photo_when_customer_update_fails() {
+        Customer customer = CustomerFactory.valid(UUID.randomUUID());
+        underTest.getCustomerDao().insertCustomer(customer);
+        MatcherAssert.assertThat(underTest.getCustomerPhoto(customer.getCustomerId()).isPresent(), Matchers.is(false));
+
+        CustomerPhoto newPhoto = createCustomerPhoto(customer.getCustomerId());
+        try {
+            underTest.updateCustomerWithNewPhoto(customer, newPhoto, 10);
+            Assert.fail();
+        } catch (CrmServiceApiStaleStateException e) {
+
+        }
+        MatcherAssert.assertThat(underTest.getCustomerPhoto(customer.getCustomerId()).isPresent(), Matchers.is(false));
+        Customer dbCustomer = underTest.getCustomerDao().getCustomerById(customer.getCustomerId()).get();
+        MatcherAssert.assertThat(dbCustomer.getVersion(), Matchers.is(customer.getVersion()));
+    }
+
+    @Test
     public void should_delete_photo_when_deleting_customer() {
         CustomerPhoto newPhoto = insertCustomerPhoto(UUID.randomUUID());
-        customerDao.deleteCustomer(newPhoto.getCustomerId());
+        underTest.getCustomerDao().deleteCustomer(newPhoto.getCustomerId());
         Optional<CustomerPhoto> byId = underTest.getCustomerPhoto(newPhoto.getCustomerId());
         MatcherAssert.assertThat(byId.isPresent(), Matchers.is(false));
     }
@@ -85,7 +102,7 @@ public class CustomerPhotosDaoTest extends RunningServiceBaseTest {
 
     private CustomerPhoto insertCustomerPhoto(UUID customerId) {
         Customer customer = CustomerFactory.valid(customerId);
-        customerDao.insertCustomer(customer);
+        underTest.getCustomerDao().insertCustomer(customer);
 
         CustomerPhoto newPhoto = createCustomerPhoto(customerId);
         int rowsInserted = underTest.insertCustomerPhoto(newPhoto);

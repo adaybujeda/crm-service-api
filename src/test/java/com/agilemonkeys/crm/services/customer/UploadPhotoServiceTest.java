@@ -12,8 +12,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 public class UploadPhotoServiceTest {
@@ -28,9 +26,8 @@ public class UploadPhotoServiceTest {
 
     private CustomerPhotosDao customerPhotosDao = Mockito.mock(CustomerPhotosDao.class);
     private CheckCustomerStateService checkCustomerStateService = Mockito.mock(CheckCustomerStateService.class);
-    private UpdateCustomerService updateCustomerService = Mockito.mock(UpdateCustomerService.class);
 
-    private UploadPhotoService underTest = new UploadPhotoService(customerPhotosDao, checkCustomerStateService, updateCustomerService);
+    private UploadPhotoService underTest = new UploadPhotoService(customerPhotosDao, checkCustomerStateService);
 
     @Test(expected = CrmServiceApiDuplicatedException.class)
     public void should_propagate_exception_when_checkCustomerStateService_throws_one() {
@@ -44,46 +41,27 @@ public class UploadPhotoServiceTest {
     public void should_propagate_exception_when_updateCustomerService_throws_one() {
         Integer version = 10;
         Mockito.when(checkCustomerStateService.checkCustomerState(CUSTOMER_ID, version)).thenReturn(EXISTING_CUSTOMER);
-        Mockito.when(updateCustomerService.updateCustomer(Mockito.eq(version), Mockito.any(Customer.class))).thenThrow(new CrmServiceApiStaleStateException("test"));
+        Mockito.when(customerPhotosDao.updateCustomerWithNewPhoto(Mockito.any(Customer.class), Mockito.any(CustomerPhoto.class), Mockito.eq(version))).thenThrow(new CrmServiceApiStaleStateException("test"));
 
         underTest.createPhotoForCustomer(CUSTOMER_ID, version, TYPE, PHOTO, CREATED_BY);
     }
 
     @Test
-    public void should_create_photo_when_customer_version_matches_and_no_existing_photo() {
+    public void should_create_photo_when_customer_exists() {
         Integer version = 10;
         Mockito.when(checkCustomerStateService.checkCustomerState(CUSTOMER_ID, version)).thenReturn(EXISTING_CUSTOMER);
-        Mockito.when(customerPhotosDao.getCustomerPhoto(CUSTOMER_ID)).thenReturn(Optional.empty());
-        Mockito.when(updateCustomerService.updateCustomer(Mockito.eq(version), Mockito.any(Customer.class))).thenReturn(EXISTING_CUSTOMER);
+        Mockito.when(customerPhotosDao.updateCustomerWithNewPhoto(Mockito.any(Customer.class), Mockito.any(CustomerPhoto.class), Mockito.eq(version))).thenReturn(1);
 
         CustomerPhoto result = underTest.createPhotoForCustomer(CUSTOMER_ID, version, TYPE, PHOTO, CREATED_BY);
 
         checkCustomerPhoto(result);
 
         Mockito.verify(checkCustomerStateService).checkCustomerState(CUSTOMER_ID, version);
-        Mockito.verify(customerPhotosDao).insertCustomerPhoto(Mockito.any(CustomerPhoto.class));
+        ArgumentCaptor<CustomerPhoto> createdPhoto = ArgumentCaptor.forClass(CustomerPhoto.class);
         ArgumentCaptor<Customer> updatedCustomer = ArgumentCaptor.forClass(Customer.class);
-        Mockito.verify(updateCustomerService).updateCustomer(Mockito.eq(version), updatedCustomer.capture());
+        Mockito.verify(customerPhotosDao).updateCustomerWithNewPhoto(updatedCustomer.capture(), createdPhoto.capture(), Mockito.eq(version));
 
-        checkCustomerUpdate(updatedCustomer.getValue());
-    }
-
-    @Test
-    public void should_update_photo_when_customer_version_matches_and_existing_photo() {
-        Integer version = 10;
-        Mockito.when(checkCustomerStateService.checkCustomerState(CUSTOMER_ID, version)).thenReturn(EXISTING_CUSTOMER);
-        Mockito.when(customerPhotosDao.getCustomerPhoto(CUSTOMER_ID)).thenReturn(Optional.of(new CustomerPhoto(CUSTOMER_ID, UUID.randomUUID().toString(), new byte[10], LocalDateTime.now())));
-        Mockito.when(updateCustomerService.updateCustomer(Mockito.eq(version), Mockito.any(Customer.class))).thenReturn(EXISTING_CUSTOMER);
-
-        CustomerPhoto result = underTest.createPhotoForCustomer(CUSTOMER_ID, version, TYPE, PHOTO, CREATED_BY);
-
-        checkCustomerPhoto(result);
-
-        Mockito.verify(checkCustomerStateService).checkCustomerState(CUSTOMER_ID, version);
-        Mockito.verify(customerPhotosDao).updateCustomerPhoto(Mockito.any(CustomerPhoto.class));
-        ArgumentCaptor<Customer> updatedCustomer = ArgumentCaptor.forClass(Customer.class);
-        Mockito.verify(updateCustomerService).updateCustomer(Mockito.eq(version), updatedCustomer.capture());
-
+        checkCustomerPhoto(createdPhoto.getValue());
         checkCustomerUpdate(updatedCustomer.getValue());
     }
 

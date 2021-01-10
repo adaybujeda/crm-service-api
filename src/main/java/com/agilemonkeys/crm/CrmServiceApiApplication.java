@@ -84,7 +84,7 @@ public class CrmServiceApiApplication extends Application<CrmServiceApiConfigura
         UpdateCustomerService updateCustomerService = new UpdateCustomerService(storageContext.getCustomersDao(), checkCustomerStateService, duplicatedIdService);
         GetCustomersService getCustomersService = new GetCustomersService(storageContext.getCustomersDao());
         DeleteCustomerService deleteCustomerService = new DeleteCustomerService(storageContext.getCustomersDao());
-        UploadPhotoService uploadPhotoService = new UploadPhotoService(storageContext.getCustomerPhotosDao(), checkCustomerStateService, updateCustomerService);
+        UploadPhotoService uploadPhotoService = new UploadPhotoService(storageContext.getCustomerPhotosDao(), checkCustomerStateService);
         GetCustomerPhotoService getCustomerPhotoService = new GetCustomerPhotoService(storageContext.getCustomerPhotosDao());
 
         //RESOURCES

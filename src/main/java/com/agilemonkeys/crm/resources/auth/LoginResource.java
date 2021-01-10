@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,7 +29,7 @@ public class LoginResource {
     }
 
     @POST
-    public LoginResponse login(@Valid LoginRequest request) {
+    public LoginResponse login(@NotNull @Valid LoginRequest request) {
         CrmAuthToken authToken = loginService.login(request);
         LoginResponse response = new LoginResponse(authToken.getUserId(), authToken.getEncodedJwtToken(), authToken.getTokenTTLInSeconds());
         log.info("action=login result=success authToken={}", authToken);

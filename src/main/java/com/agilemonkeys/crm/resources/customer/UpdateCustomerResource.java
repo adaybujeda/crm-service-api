@@ -34,7 +34,7 @@ public class UpdateCustomerResource {
 
     @PUT
     @Path("/{customerId}")
-    public Response updateCustomer(@PathParam("customerId") UUID customerId, @NotNull @HeaderParam(HttpHeaders.IF_MATCH) Integer version, @Valid CreateUpdateCustomerRequest request, @Auth AuthenticatedUser authInfo) {
+    public Response updateCustomer(@PathParam("customerId") UUID customerId, @NotNull @HeaderParam(HttpHeaders.IF_MATCH) Integer version, @NotNull @Valid CreateUpdateCustomerRequest request, @Auth AuthenticatedUser authInfo) {
         Customer updatedCustomer = updateCustomerService.updateCustomer(customerId, version, request, authInfo.getUserId());
         log.info("action=updateCustomer result=success customerId={}", updatedCustomer.getCustomerId());
         return Response.noContent().build();

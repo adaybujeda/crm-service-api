@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -34,7 +35,7 @@ public class CreateUserResource {
     }
 
     @POST
-    public Response createUser(@Valid CreateUserRequest request) {
+    public Response createUser(@NotNull @Valid CreateUserRequest request) {
         User createdUser = createUserService.createUser(request);
         CreateUserResponse response = new CreateUserResponse(createdUser.getUserId());
         log.info("action=createUser result=success userId={}", createdUser.getUserId());

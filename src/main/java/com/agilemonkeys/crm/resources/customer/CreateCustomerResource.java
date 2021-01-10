@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -35,7 +36,7 @@ public class CreateCustomerResource {
     }
 
     @POST
-    public Response createCustomer(@Valid CreateUpdateCustomerRequest request, @Auth AuthenticatedUser authInfo) {
+    public Response createCustomer(@NotNull @Valid CreateUpdateCustomerRequest request, @Auth AuthenticatedUser authInfo) {
         Customer createdCustomer = createCustomerService.createCustomer(authInfo.getUserId(), request);
         CreateCustomerResponse response = new CreateCustomerResponse(createdCustomer.getCustomerId());
         log.info("action=createCustomer result=success customerId={}", createdCustomer.getCustomerId());

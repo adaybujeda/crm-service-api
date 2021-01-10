@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -33,7 +34,7 @@ public class ResetPasswordResource {
     }
 
     @POST
-    public Response resetPassword(@Valid ResetPasswordRequest request, @Auth AuthenticatedUser authUser) {
+    public Response resetPassword(@NotNull @Valid ResetPasswordRequest request, @Auth AuthenticatedUser authUser) {
         User user = resetPasswordService.resetPassword(authUser.getUserId(), request.getNewPassword());
         log.info("action=resetPassword result=success user={}", user);
         return Response.noContent().build();

@@ -33,7 +33,7 @@ public class UpdateUserResource {
 
     @PUT
     @Path("/{userId}")
-    public Response updateUser(@PathParam("userId") UUID userId, @NotNull @HeaderParam(HttpHeaders.IF_MATCH) Integer version, @Valid UpdateUserRequest request) {
+    public Response updateUser(@PathParam("userId") UUID userId, @NotNull @HeaderParam(HttpHeaders.IF_MATCH) Integer version, @NotNull @Valid UpdateUserRequest request) {
         User updatedUser = updateUserService.updateUser(userId, version, request);
         log.info("action=updateUser result=success userId={}", userId);
         return Response.noContent().build();
@@ -41,7 +41,7 @@ public class UpdateUserResource {
 
     @PATCH
     @Path("/{userId}")
-    public Response updateRole(@PathParam("userId") UUID userId, @NotNull @HeaderParam(HttpHeaders.IF_MATCH) Integer version, @Valid UpdateRoleRequest request) {
+    public Response updateRole(@PathParam("userId") UUID userId, @NotNull @HeaderParam(HttpHeaders.IF_MATCH) Integer version, @NotNull @Valid UpdateRoleRequest request) {
         User updatedUser = updateUserService.updateRole(userId, version, request.getRole());
         log.info("action=updateRole result=success userId={}", userId);
         return Response.noContent().build();

@@ -23,7 +23,7 @@ Run these commands from the project root folder.
 * `DB_URL=jdbc:h2:/tmp/crm-service-db java -jar target/crm-service-api-1.0.jar server /config.yml`
 * Some test URLs:
 * `curl -v http://localhost:8081/healthcheck`
-* `curl -v http://localhost:8080/crm/users`
+* `curl -v -X POST http://localhost:8080/auth/login`
 
 ### Running the service locally with Docker
 Instructions on how to run with Docker [here](docs/docker.md)

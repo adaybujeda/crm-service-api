@@ -13,6 +13,7 @@ Building the image overriding defaults, all arguments in the [Dockerfile](../doc
 * **SECRET:** JWT secret to sign tokens
 * **DB:** JDBC Url to connect to the database
 * **DB_DRIVER:** JDBC driver class to connect to the database
+* **DB_VAL:** SQL query to validate connection
 * **DB_U:** Database username
 * **DB_P:** Database password
 

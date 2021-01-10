@@ -4,7 +4,6 @@ import com.google.common.base.MoreObjects;
 
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 public class User {
@@ -70,30 +69,6 @@ public class User {
 
     public boolean isDeleted() {
         return deletedDate != null;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        final User other = (User) obj;
-        return Objects.equals(this.userId, other.userId)
-                && Objects.equals(this.name, other.name)
-                && Objects.equals(this.username, other.username)
-                && Objects.equals(this.passwordHash, other.passwordHash)
-                && Objects.equals(this.role, other.role)
-                && Objects.equals(this.version, other.version)
-                && Objects.equals(this.createdDate, other.createdDate)
-                && Objects.equals(this.updatedDate, other.updatedDate)
-                && Objects.equals(this.deletedDate, other.deletedDate);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                this.userId, this.name, this.username, this.passwordHash, this.role, this.version, this.createdDate, this.updatedDate, this.deletedDate);
-
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.agilemonkeys.crm.storage;
 
 import com.agilemonkeys.crm.RunningServiceBaseTest;
+import com.agilemonkeys.crm.domain.Customer;
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.domain.UserBuilder;
 import org.hamcrest.CoreMatchers;
@@ -22,8 +23,9 @@ public class UsersDaoTest extends RunningServiceBaseTest {
 
     @BeforeClass
     public static void beforeTest() throws Exception {
-        Jdbi jdbi = Jdbi.create("jdbc:h2:mem:test", "sa", "sa");
+        Jdbi jdbi = Jdbi.create(getDataSource().getUrl(), getDataSource().getUser(), getDataSource().getPassword());
         jdbi.installPlugin(new SqlObjectPlugin());
+        jdbi.registerArgument(new UUIDArgumentFactory());
         jdbi.registerRowMapper(ConstructorMapper.factory(User.class));
 
         underTest = jdbi.onDemand(UsersDao.class);
@@ -42,7 +44,7 @@ public class UsersDaoTest extends RunningServiceBaseTest {
         User newUser = insertUser(UUID.randomUUID(), username);
         Optional<User> userById = underTest.getUserById(newUser.getUserId());
         MatcherAssert.assertThat(userById.isPresent(), Matchers.is(true));
-        MatcherAssert.assertThat(userById.get(), Matchers.is(newUser));
+        checkUser(userById.get(), newUser);
     }
 
     @Test
@@ -51,7 +53,7 @@ public class UsersDaoTest extends RunningServiceBaseTest {
         User newUser = insertUser(UUID.randomUUID(), username);
         Optional<User> userByUsername= underTest.getUserByUsername(username);
         MatcherAssert.assertThat(userByUsername.isPresent(), Matchers.is(true));
-        MatcherAssert.assertThat(userByUsername.get(), Matchers.is(newUser));
+        checkUser(userByUsername.get(), newUser);
     }
 
     @Test
@@ -68,14 +70,13 @@ public class UsersDaoTest extends RunningServiceBaseTest {
         String username = UUID.randomUUID().toString();
         User oldUser = insertUser(UUID.randomUUID(), username, 1);
         User updatedUser =UserBuilder.fromUser(oldUser)
-                .withName("newName").withNormalizedUsername("newUsername").withPasswordHash("mnewPassword")
-                .withUpdatedDate().build();
+                .withName("newName").withUpdatedDate().build();
         int updatedRows = underTest.updateUser(updatedUser, oldUser.getVersion());
         MatcherAssert.assertThat(updatedRows, Matchers.is(1));
 
         Optional<User> userById = underTest.getUserById(oldUser.getUserId());
         MatcherAssert.assertThat(userById.isPresent(), Matchers.is(true));
-        MatcherAssert.assertThat(userById.get(), Matchers.is(updatedUser));
+        checkUser(userById.get(), updatedUser);
     }
 
     @Test
@@ -122,6 +123,18 @@ public class UsersDaoTest extends RunningServiceBaseTest {
 
     private User insertUser(UUID userId, String username) {
         return insertUser(userId, username, 1);
+    }
+
+    private void checkUser(User from, User to) {
+        MatcherAssert.assertThat(from.getUserId(), CoreMatchers.is(to.getUserId()));
+        MatcherAssert.assertThat(from.getName(), CoreMatchers.is(to.getName()));
+        MatcherAssert.assertThat(from.getUsername(), CoreMatchers.is(to.getUsername()));
+        MatcherAssert.assertThat(from.getPasswordHash(), CoreMatchers.is(to.getPasswordHash()));
+        MatcherAssert.assertThat(from.getRole(), CoreMatchers.is(to.getRole()));
+        MatcherAssert.assertThat(from.getVersion(), CoreMatchers.is(to.getVersion()));
+        MatcherAssert.assertThat(from.getCreatedDate(), CoreMatchers.notNullValue());
+        MatcherAssert.assertThat(from.getUpdatedDate(), CoreMatchers.notNullValue());
+        MatcherAssert.assertThat(from.getDeletedDate(), CoreMatchers.nullValue());
     }
 
 }

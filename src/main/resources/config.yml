@@ -18,7 +18,7 @@ dataSource:
   properties:
     charSet: UTF-8
   maxWaitForConnection: 5s
-  validationQuery: "CALL NOW()"
+  validationQuery: ${DB_VALIDATION:-CALL NOW()}
   validationQueryTimeout: 3s
   minSize: 8
   maxSize: 32

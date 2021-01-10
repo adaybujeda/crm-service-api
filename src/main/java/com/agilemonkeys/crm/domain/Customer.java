@@ -4,7 +4,6 @@ import com.google.common.base.MoreObjects;
 
 import java.beans.ConstructorProperties;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.UUID;
 
 public class Customer {
@@ -72,32 +71,6 @@ public class Customer {
 
     public UUID getUpdatedBy() {
         return updatedBy;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        final Customer other = (Customer) obj;
-        return Objects.equals(this.customerId, other.customerId)
-                && Objects.equals(this.providedId, other.providedId)
-                && Objects.equals(this.name, other.name)
-                && Objects.equals(this.surname, other.surname)
-                && Objects.equals(this.photoId, other.photoId)
-                && Objects.equals(this.version, other.version)
-                && Objects.equals(this.createdDate, other.createdDate)
-                && Objects.equals(this.createdBy, other.createdBy)
-                && Objects.equals(this.updatedDate, other.updatedDate)
-                && Objects.equals(this.updatedBy, other.updatedBy);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                this.customerId, this.providedId, this.name, this.surname, this.photoId,
-                this.version, this.createdDate, this.createdBy, this.updatedDate, this.updatedBy);
-
     }
 
     @Override

@@ -75,7 +75,7 @@ Sometimes, for small projects/teams, this is not efficient.
 
 In our case, to keep the project simple, I have chosen the database storage to reuse the database we are already using. I have chosen the database over file storage to make the system a bit more portable.  
 
-I will be following some recommendations I found while doing the analysis: store the photos in their own table and using a `VARBINARY` field. As well, limiting the photo size to `2MB`.
+I will be following some recommendations I found while doing the analysis: store the photos in their own table. As well, limiting the photo size to `1MB`.
 
 The customers table has a `photo_id` field, a reference to the data in the `customer_photos` table. `photo_id` is added to the Customer record on photo upload. This `photo_id` is used to generate the photo URL in the GET Customer response and avoid having to read the `customer_photos` table to know if a photo was uploaded.
 

@@ -30,7 +30,7 @@ import java.util.UUID;
 @PermitAll
 public class UploadCustomerPhotoResource {
     public static final String PATH = "/crm/customers/{customerId}/photo";
-    private static final int MAX_SIZE_IN_MB = 2;
+    private static final int MAX_SIZE_IN_MB = 1;
     private static final int MAX_SIZE_IN_BYTES = 1024 * 1024 * MAX_SIZE_IN_MB;
 
     private static final Logger log = LoggerFactory.getLogger(UploadCustomerPhotoResource.class);

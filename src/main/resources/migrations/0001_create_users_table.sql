@@ -8,9 +8,9 @@ CREATE TABLE users (
   password_hash VARCHAR(512) NOT NULL,
   role VARCHAR(40) NOT NULL,
   version INT NOT NULL,
-  created_date TIMESTAMP NOT NULL,
-  updated_date TIMESTAMP NOT NULL,
-  deleted_date TIMESTAMP,
+  created_date TIMESTAMP(6) NOT NULL,
+  updated_date TIMESTAMP(6) NOT NULL,
+  deleted_date TIMESTAMP(6),
 
   CONSTRAINT users_username UNIQUE (username)
 );

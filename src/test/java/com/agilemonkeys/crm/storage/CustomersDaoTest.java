@@ -22,8 +22,9 @@ public class CustomersDaoTest extends RunningServiceBaseTest {
 
     @BeforeClass
     public static void beforeTest() throws Exception {
-        Jdbi jdbi = Jdbi.create("jdbc:h2:mem:test", "sa", "sa");
+        Jdbi jdbi = Jdbi.create(getDataSource().getUrl(), getDataSource().getUser(), getDataSource().getPassword());
         jdbi.installPlugin(new SqlObjectPlugin());
+        jdbi.registerArgument(new UUIDArgumentFactory());
         jdbi.registerRowMapper(ConstructorMapper.factory(Customer.class));
 
         underTest = jdbi.onDemand(CustomersDao.class);
@@ -39,7 +40,7 @@ public class CustomersDaoTest extends RunningServiceBaseTest {
         Customer newCustomer = insertCustomer(UUID.randomUUID());
         Optional<Customer> byId = underTest.getCustomerById(newCustomer.getCustomerId());
         MatcherAssert.assertThat(byId.isPresent(), Matchers.is(true));
-        MatcherAssert.assertThat(byId.get(), Matchers.is(newCustomer));
+        checkCustomer(byId.get(), newCustomer);
     }
 
     @Test
@@ -47,7 +48,7 @@ public class CustomersDaoTest extends RunningServiceBaseTest {
         Customer newCustomer = insertCustomer(UUID.randomUUID());
         Optional<Customer> byProvidedId = underTest.getCustomerByProvidedId(newCustomer.getProvidedId());
         MatcherAssert.assertThat(byProvidedId.isPresent(), Matchers.is(true));
-        MatcherAssert.assertThat(byProvidedId.get(), Matchers.is(newCustomer));
+        checkCustomer(byProvidedId.get(), newCustomer);
     }
 
     @Test
@@ -68,7 +69,7 @@ public class CustomersDaoTest extends RunningServiceBaseTest {
 
         Optional<Customer> byId = underTest.getCustomerById(oldCustomer.getCustomerId());
         MatcherAssert.assertThat(byId.isPresent(), Matchers.is(true));
-        MatcherAssert.assertThat(byId.get(), Matchers.is(updatedCustomer));
+        checkCustomer(byId.get(), updatedCustomer);
     }
 
     @Test
@@ -114,6 +115,19 @@ public class CustomersDaoTest extends RunningServiceBaseTest {
 
     private Customer insertCustomer(UUID customerId) {
         return insertCustomer(customerId, 1);
+    }
+
+    private void checkCustomer(Customer from, Customer to) {
+        MatcherAssert.assertThat(from.getCustomerId(), CoreMatchers.is(to.getCustomerId()));
+        MatcherAssert.assertThat(from.getProvidedId(), CoreMatchers.is(to.getProvidedId()));
+        MatcherAssert.assertThat(from.getName(), CoreMatchers.is(to.getName()));
+        MatcherAssert.assertThat(from.getSurname(), CoreMatchers.is(to.getSurname()));
+        MatcherAssert.assertThat(from.getPhotoId(), CoreMatchers.is(to.getPhotoId()));
+        MatcherAssert.assertThat(from.getVersion(), CoreMatchers.is(to.getVersion()));
+        MatcherAssert.assertThat(from.getCreatedBy(), CoreMatchers.is(to.getCreatedBy()));
+        MatcherAssert.assertThat(from.getUpdatedBy(), CoreMatchers.is(to.getUpdatedBy()));
+        MatcherAssert.assertThat(from.getCreatedDate(), CoreMatchers.notNullValue());
+        MatcherAssert.assertThat(from.getUpdatedDate(), CoreMatchers.notNullValue());
     }
 
 }

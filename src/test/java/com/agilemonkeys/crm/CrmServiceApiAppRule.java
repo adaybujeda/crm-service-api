@@ -7,6 +7,7 @@ import io.dropwizard.testing.junit.DropwizardAppRule;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.client.Client;
+import java.util.concurrent.TimeUnit;
 
 public class CrmServiceApiAppRule extends DropwizardAppRule<CrmServiceApiConfiguration> {
 
@@ -16,7 +17,7 @@ public class CrmServiceApiAppRule extends DropwizardAppRule<CrmServiceApiConfigu
 
     @Override
     public Client client () {
-        return super.clientBuilder().build();
+        return super.clientBuilder().connectTimeout(5, TimeUnit.SECONDS).readTimeout(10, TimeUnit.SECONDS).build();
     }
 
 }

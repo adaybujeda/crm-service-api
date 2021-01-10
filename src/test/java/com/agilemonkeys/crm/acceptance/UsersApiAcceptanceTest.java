@@ -35,7 +35,7 @@ public class UsersApiAcceptanceTest extends RunningServiceBaseTest implements Wi
         //CREATE REGULAR USER
         UUID regularUser = createUser(adminAuthInfo, USER_USERNAME, USER_PASSWORD, UserRole.USER);
         //UPDATE USER
-        String newUsernameForUser = "jSmith";
+        String newUsernameForUser = UUID.randomUUID().toString() + "jSmith";
         updateUser(adminAuthInfo, regularUser, newUsernameForUser);
         //VERIFY USER CAN LOG IN
         LoginResponse userAuthInfo = login(newUsernameForUser, USER_PASSWORD);

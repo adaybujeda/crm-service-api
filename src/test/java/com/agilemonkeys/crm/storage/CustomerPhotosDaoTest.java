@@ -25,8 +25,9 @@ public class CustomerPhotosDaoTest extends RunningServiceBaseTest {
 
     @BeforeClass
     public static void beforeTest() throws Exception {
-        Jdbi jdbi = Jdbi.create("jdbc:h2:mem:test", "sa", "sa");
+        Jdbi jdbi = Jdbi.create(getDataSource().getUrl(), getDataSource().getUser(), getDataSource().getPassword());
         jdbi.installPlugin(new SqlObjectPlugin());
+        jdbi.registerArgument(new UUIDArgumentFactory());
         jdbi.registerRowMapper(ConstructorMapper.factory(Customer.class));
         jdbi.registerRowMapper(ConstructorMapper.factory(CustomerPhoto.class));
 

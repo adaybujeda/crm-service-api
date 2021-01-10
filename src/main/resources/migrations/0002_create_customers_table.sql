@@ -8,9 +8,9 @@ CREATE TABLE customers (
   surname VARCHAR(100) NOT NULL,
   photo_id CHAR(36),
   version INT NOT NULL,
-  created_date TIMESTAMP NOT NULL,
+  created_date TIMESTAMP(6) NOT NULL,
   created_by CHAR(36) NOT NULL,
-  updated_date TIMESTAMP NOT NULL,
+  updated_date TIMESTAMP(6) NOT NULL,
   updated_by CHAR(36) NOT NULL,
 
   CONSTRAINT customers_provided_id UNIQUE (provided_id)

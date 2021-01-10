@@ -5,6 +5,7 @@ import com.agilemonkeys.crm.domain.CustomerPhoto;
 import com.agilemonkeys.crm.domain.User;
 import com.agilemonkeys.crm.storage.CustomerPhotosDao;
 import com.agilemonkeys.crm.storage.CustomersDao;
+import com.agilemonkeys.crm.storage.UUIDArgumentFactory;
 import com.agilemonkeys.crm.storage.UsersDao;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.jdbi3.JdbiFactory;
@@ -22,6 +23,7 @@ public class CrmStorageFactory {
         //CREATE DB CONNECTION POOL
         final JdbiFactory factory = new JdbiFactory();
         final Jdbi jdbi = factory.build(environment, config, "crmDatabase");
+        jdbi.registerArgument(new UUIDArgumentFactory());
         jdbi.registerRowMapper(ConstructorMapper.factory(User.class));
         jdbi.registerRowMapper(ConstructorMapper.factory(Customer.class));
         jdbi.registerRowMapper(ConstructorMapper.factory(CustomerPhoto.class));

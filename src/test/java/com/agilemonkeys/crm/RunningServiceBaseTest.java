@@ -1,16 +1,14 @@
 package com.agilemonkeys.crm;
 
 import com.agilemonkeys.crm.util.WithAuth;
+import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.testing.ConfigOverride;
-import org.jdbi.v3.core.Jdbi;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 
 import javax.ws.rs.client.Client;
 
 public abstract class RunningServiceBaseTest implements WithAuth {
-
-    private static Jdbi jdbi;
 
     @ClassRule
     public static final CrmServiceApiAppRule RULE =
@@ -29,12 +27,16 @@ public abstract class RunningServiceBaseTest implements WithAuth {
         return this;
     }
 
-    public Client getClient() {
+    public static Client getClient() {
         Client client = RULE.client();
         return client;
     }
 
-    public String getResourceUrl(String path) {
+    public static DataSourceFactory getDataSource() {
+        return RULE.getConfiguration().getDataSource();
+    }
+
+    public static String getResourceUrl(String path) {
         return  String.format("http://localhost:%d%s", RULE.getLocalPort(), path);
     }
 
